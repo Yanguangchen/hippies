@@ -1,0 +1,30 @@
+{
+  "name": "hippies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npm run lint:html && npm run lint:css",
+    "lint:html": "htmlhint \"*.html\"",
+    "lint:css": "stylelint \"*.css\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yanguangchen/hippies.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Yanguangchen/hippies/issues"
+  },
+  "homepage": "https://github.com/Yanguangchen/hippies#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "htmlhint": "^1.9.2",
+    "stylelint": "^17.13.0",
+    "stylelint-config-standard": "^40.0.0"
+  }
+}
