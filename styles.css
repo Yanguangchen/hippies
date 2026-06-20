@@ -395,6 +395,11 @@ section{padding:96px 0;position:relative}
 }
 .stat .num{font-family:'Anton';font-weight:400;font-size:2.6rem;color:var(--amber);line-height:1}
 .stat .lbl{font-size:.82rem;color:var(--muted);margin-top:4px}
+.stat--gst .num{animation:gst-pulse 2s ease-in-out infinite;display:inline-block}
+@keyframes gst-pulse{
+  0%,100%{transform:scale(1);text-shadow:0 0 0 rgba(224,168,82,0)}
+  50%{transform:scale(1.12);color:#ffdc6b;text-shadow:0 0 18px rgba(224,168,82,.9),0 0 36px rgba(224,168,82,.5)}
+}
 .about-img{width:100%;border-radius:16px;object-fit:cover;max-height:250px}
 
 /* GALLERY */
@@ -529,6 +534,9 @@ footer{padding:50px 0 40px;border-top:1px solid var(--glass-border);margin-top:4
 }
 .foot-socials a:hover{background:var(--glass-strong);transform:translateY(-3px);color:var(--amber-bright)}
 .foot-copy{font-size:.78rem;color:var(--muted);margin-top:26px;text-align:center}
+.foot-credit{font-size:.72rem;color:var(--muted);margin-top:8px;text-align:center;opacity:.6}
+.foot-credit a{color:var(--muted);text-decoration:underline;text-underline-offset:2px;transition:color .2s,opacity .2s}
+.foot-credit a:hover{color:var(--amber);opacity:1}
 
 /* RESPONSIVE */
 @media(max-width:880px){
