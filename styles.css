@@ -534,6 +534,9 @@ footer{padding:50px 0 40px;border-top:1px solid var(--glass-border);margin-top:4
 }
 .foot-socials a:hover{background:var(--glass-strong);transform:translateY(-3px);color:var(--amber-bright)}
 .foot-copy{font-size:.78rem;color:var(--muted);margin-top:26px;text-align:center}
+.foot-credit{font-size:.72rem;color:var(--muted);margin-top:8px;text-align:center;opacity:.6}
+.foot-credit a{color:var(--muted);text-decoration:underline;text-underline-offset:2px;transition:color .2s,opacity .2s}
+.foot-credit a:hover{color:var(--amber);opacity:1}
 
 /* RESPONSIVE */
 @media(max-width:880px){
