@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hippiesbar.sg/sitemap.xml
+
+# Assets
+User-agent: *
+Disallow: /node_modules/

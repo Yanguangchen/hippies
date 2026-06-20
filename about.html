@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — Hippies Bar &amp; Grill</title>
+<meta name="description" content="Learn more about Hippies Bar & Grill on Guillemard Road. An honest, unpretentious neighbourhood bar serving great food, cold beer, and good times.">
+<link rel="icon" type="image/png" href="Assets/faveicon.png">
+<link rel="apple-touch-icon" href="Assets/faveicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .about-hero {
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 140px 0 60px;
+    position: relative;
+  }
+  .about-hero h1 {
+    font-family: 'Anton';
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    text-transform: uppercase;
+    color: var(--foam);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .about-hero p {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .content-section {
+    padding: 60px 0 120px;
+  }
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .content-grid.reverse {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+  .content-text h2 {
+    font-family: 'Anton';
+    font-size: 2.8rem;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 20px;
+    line-height: 1.1;
+  }
+  .content-text p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+  .content-img {
+    width: 100%;
+    border-radius: 24px;
+    object-fit: cover;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    border: 1px solid var(--glass-border);
+    transition: transform 0.4s ease;
+  }
+  .content-img:hover {
+    transform: translateY(-10px);
+  }
+  @media(max-width: 880px) {
+    .content-grid, .content-grid.reverse { grid-template-columns: 1fr; gap: 40px; }
+    .content-grid:nth-child(even) .content-img { order: -1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav class="nav">
+      <a href="index.html" class="brand">HIPPIES<span>.</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html#taps">On Tap</a>
+        <a href="index.html#menu">Menu</a>
+        <a href="about.html" style="color:var(--amber-bright)">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="index.html#visit">Visit</a>
+        <a href="index.html#visit" class="nav-cta">Reserve Online</a>
+      </div>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ABOUT HERO -->
+  <section class="about-hero">
+    <div class="wrap">
+      <div class="sec-eyebrow">Our Story</div>
+      <h1>More than just<br>a counter to drink at</h1>
+      <p>We built Hippies because we wanted a place we'd actually want to hang out in. No pretentious vibes, no hidden fees. Just cold beer, hot grills, and a solid community.</p>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <section class="content-section">
+    <div class="wrap">
+      
+      <div class="content-grid" style="margin-bottom: 140px;">
+        <div class="content-text">
+          <h2>Born from frustration</h2>
+          <p>Hippies was born out of a simple, shared frustration: why is it so incredibly hard to find an honest, affordable, and unpretentious bar with genuinely great food in Singapore?</p>
+          <p>We were tired of paying a premium for a pint, only to be slapped with GST and service charges on top of an already bloated bill. We wanted a local spot—a true neighbourhood joint right in the heart of Guillemard Road where everyone feels welcome.</p>
+        </div>
+        <div>
+          <img src="Assets/12.png" alt="Hippies Bar Neon Sign" class="content-img">
+        </div>
+      </div>
+
+      <div class="content-grid reverse">
+        <div>
+          <img src="Assets/19.avif" alt="People gathering at Hippies" class="content-img">
+        </div>
+        <div class="content-text">
+          <h2>The Local Philosophy</h2>
+          <p>We operate on a straightforward philosophy: what you see is what you pay. Our $19.90 nett Ribeye steak isn't a gimmick; it's a staple that keeps people coming back. We pour perfect pints of Guinness and mix serious cocktails without the serious attitude.</p>
+          <p>At Hippies, the bartender remembers your pour. We play classic rock, our outdoor seats are perfect for unwinding, and strangers frequently leave as regulars. It's not just a bar; it's a community.</p>
+          <a href="index.html#visit" class="btn-primary" style="display:inline-block; margin-top:20px;">Come Join the Community</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="brand">HIPPIES<span style="color:var(--amber)">.</span> BAR &amp; GRILL</div>
+      <div class="foot-socials">
+        <a href="https://www.instagram.com/hippiesbar/" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+        <a href="https://www.facebook.com/HippiesBarNGrill/" target="_blank" rel="noopener" aria-label="Facebook">FB</a>
+        <a href="tel:+6588818391" aria-label="Call">☎</a>
+      </div>
+    </div>
+    <p class="foot-copy">391 Guillemard Road, Singapore 399789 · Open daily 4:30pm till late · No GST · No service charge</p>
+  </div>
+</footer>
+
+<script>
+  const burger=document.getElementById('burger');
+  const links=document.getElementById('navLinks');
+  burger.addEventListener('click',()=>{
+    const open=links.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open);
+  });
+</script>
+</body>
+</html>

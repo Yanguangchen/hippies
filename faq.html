@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — Hippies Bar &amp; Grill</title>
+<meta name="description" content="Got questions? We've got answers. Find out about our opening hours, reservations, pet policy, and more at Hippies Bar & Grill.">
+<link rel="icon" type="image/png" href="Assets/faveicon.png">
+<link rel="apple-touch-icon" href="Assets/faveicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .faq-hero {
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 160px 0 60px;
+  }
+  .faq-hero h1 {
+    font-family: 'Anton';
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    text-transform: uppercase;
+    color: var(--foam);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .faq-hero p {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .faq-section {
+    padding: 40px 0 120px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  details {
+    background: var(--glass);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  details:hover {
+    background: var(--glass-strong);
+  }
+  details[open] {
+    border-color: rgba(224,168,82,.25);
+  }
+  summary {
+    padding: 24px 30px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--foam);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: "+";
+    color: var(--amber);
+    font-size: 1.8rem;
+    font-weight: 400;
+    transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+    line-height: 1;
+  }
+  details[open] summary::after {
+    content: "−";
+    transform: rotate(180deg);
+  }
+
+  /* Animated accordion body */
+  .faq-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  details[open] .faq-body {
+    grid-template-rows: 1fr;
+  }
+  .faq-body-inner {
+    overflow: hidden;
+  }
+  .faq-answer {
+    padding: 0 30px 24px;
+    color: var(--muted);
+    font-size: 1.02rem;
+    line-height: 1.6;
+    border-top: 1px dashed rgba(244,237,224,0.08);
+    margin-top: 10px;
+    padding-top: 20px;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.35s 0.05s, transform 0.35s 0.05s;
+  }
+  details[open] .faq-answer {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .faq-answer a {
+    color: var(--amber);
+    text-decoration: none;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .faq-answer a:hover {
+    color: var(--amber-bright);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav class="nav">
+      <a href="index.html" class="brand">HIPPIES<span>.</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html#taps">On Tap</a>
+        <a href="index.html#menu">Menu</a>
+        <a href="about.html">About</a>
+        <a href="faq.html" style="color:var(--amber-bright)">FAQ</a>
+        <a href="index.html#visit">Visit</a>
+        <a href="index.html#visit" class="nav-cta">Reserve Online</a>
+      </div>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="faq-hero">
+    <div class="wrap">
+      <div class="sec-eyebrow">Got Questions?</div>
+      <h1>Frequently Asked</h1>
+      <p>Everything you need to know before you pull up a stool.</p>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div class="wrap">
+      
+      <details>
+        <summary>Do you really charge no GST and no service charge?</summary>
+        <div class="faq-body"><div class="faq-body-inner">
+          <div class="faq-answer">
+            Yes. What you see on the menu is exactly what you pay. Our $19.90 nett Ribeye steak is exactly $19.90 when the bill comes. We believe in honest pricing without the nasty surprises at the end of the night.
+          </div>
+        </div></div>
+      </details>
+
+      <details>
+        <summary>Do I need to make a reservation?</summary>
+        <div class="faq-body"><div class="faq-body-inner">
+          <div class="faq-answer">
+            Walk-ins are always welcome, but tables do go fast on weekends and steak nights. If you’re coming with a group or want to secure an outdoor table, we highly recommend <a href="index.html#visit">booking online</a> or dropping us a WhatsApp at <a href="tel:+6588818391">8881 8391</a>.
+          </div>
+        </div></div>
+      </details>
+
+      <details>
+        <summary>Are there vegetarian, vegan, or gluten-free options?</summary>
+        <div class="faq-body"><div class="faq-body-inner">
+          <div class="faq-answer">
+            Yes, we do! While we are known for our grills and steaks, we offer several delicious vegetarian and dietary-friendly options. Just let our friendly staff know about your dietary requirements when you arrive, and we’ll take care of you.
+          </div>
+        </div></div>
+      </details>
+
+      <details>
+        <summary>Is there parking available near the bar?</summary>
+        <div class="faq-body"><div class="faq-body-inner">
+          <div class="faq-answer">
+            There is street parking available along Guillemard Road and the surrounding residential streets. However, spots can fill up quickly during peak hours, so taking public transport or a Grab is always a good idea (especially if you plan on enjoying our Happy Hour!).
+          </div>
+        </div></div>
+      </details>
+
+      <details>
+        <summary>When is Happy Hour?</summary>
+        <div class="faq-body"><div class="faq-body-inner">
+          <div class="faq-answer">
+            Our Happy Hour runs every day before 8:00 PM. It’s the perfect time to grab a Bucket of 5 San Miguel Pilsners for just $40 nett.
+          </div>
+        </div></div>
+      </details>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="brand">HIPPIES<span style="color:var(--amber)">.</span> BAR &amp; GRILL</div>
+      <div class="foot-socials">
+        <a href="https://www.instagram.com/hippiesbar/" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+        <a href="https://www.facebook.com/HippiesBarNGrill/" target="_blank" rel="noopener" aria-label="Facebook">FB</a>
+        <a href="tel:+6588818391" aria-label="Call">☎</a>
+      </div>
+    </div>
+    <p class="foot-copy">391 Guillemard Road, Singapore 399789 · Open daily 4:30pm till late · No GST · No service charge</p>
+  </div>
+</footer>
+
+<script>
+  const burger=document.getElementById('burger');
+  const links=document.getElementById('navLinks');
+  burger.addEventListener('click',()=>{
+    const open=links.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open);
+  });
+
+  /* Smooth accordion close animation */
+  document.querySelectorAll('details').forEach(d=>{
+    const summary=d.querySelector('summary');
+    summary.addEventListener('click',e=>{
+      if(d.open){
+        e.preventDefault();
+        const body=d.querySelector('.faq-body');
+        body.style.gridTemplateRows='0fr';
+        d.querySelector('.faq-answer').style.opacity='0';
+        d.querySelector('.faq-answer').style.transform='translateY(-8px)';
+        body.addEventListener('transitionend',function handler(){
+          d.removeAttribute('open');
+          body.style.gridTemplateRows='';
+          d.querySelector('.faq-answer').style.opacity='';
+          d.querySelector('.faq-answer').style.transform='';
+          body.removeEventListener('transitionend',handler);
+        },{once:true});
+      }
+    });
+  });
+</script>
+</body>
+</html>
