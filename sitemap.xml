@@ -19,6 +19,30 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://hippiesbar.sg/blog.html</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hippiesbar.sg/blog/best-neighbourhood-bar-guillemard-road.html</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://hippiesbar.sg/blog/affordable-ribeye-steak-singapore.html</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://hippiesbar.sg/blog/guinness-on-tap-live-music-singapore.html</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://hippiesbar.sg/menu.pdf</loc>
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
