@@ -132,25 +132,35 @@ header{
   -webkit-background-clip:text;
   background-clip:text;
   -webkit-text-fill-color:transparent;
-  animation:ice-shimmer 3s ease-in-out infinite;
-  filter:drop-shadow(0 0 8px rgba(138,212,240,.3));
+  animation:ice-shimmer 3s ease-in-out infinite,chill-glow 4s ease-in-out infinite alternate;
+  filter:drop-shadow(0 0 10px rgba(138,212,240,.35));
 }
 @keyframes ice-shimmer{
   0%{background-position:0% 0%}
   50%{background-position:0% 100%}
   100%{background-position:0% 0%}
 }
+@keyframes chill-glow{
+  0%{filter:drop-shadow(0 0 8px rgba(138,212,240,.28))}
+  100%{filter:drop-shadow(0 0 22px rgba(164,226,248,.6))}
+}
 .frost{
   position:absolute;
   pointer-events:none;
   opacity:0;
+  line-height:1;
+  will-change:transform,opacity;
+  /* the heading paints its gradient with -webkit-text-fill-color:transparent,
+     which descendants inherit — restore it or the glyphs never show */
+  -webkit-text-fill-color:currentColor;
   animation:frost-fall linear forwards;
 }
 @keyframes frost-fall{
-  0%{opacity:0;transform:translateY(0) rotate(0deg) scale(1)}
-  15%{opacity:.8}
-  50%{opacity:.5}
-  100%{opacity:0;transform:translateY(60px) translateX(var(--drift)) rotate(var(--spin)) scale(0.3)}
+  0%{opacity:0;transform:translate(0,0) rotate(0deg) scale(.35)}
+  12%{opacity:1;transform:translate(calc(var(--sway) * .35),calc(var(--fall) * .12)) rotate(calc(var(--spin) * .12)) scale(1)}
+  40%{opacity:.95;transform:translate(var(--sway),calc(var(--fall) * .4)) rotate(calc(var(--spin) * .4)) scale(1)}
+  72%{opacity:.75;transform:translate(calc(var(--drift) * .75),calc(var(--fall) * .72)) rotate(calc(var(--spin) * .72)) scale(.88)}
+  100%{opacity:0;transform:translate(var(--drift),var(--fall)) rotate(var(--spin)) scale(.45)}
 }
 .hero h1 em{
   font-style:normal;display:block;position:relative;overflow:visible;
@@ -167,27 +177,52 @@ header{
   -webkit-background-clip:text;
   background-clip:text;
   -webkit-text-fill-color:transparent;
-  animation:fire 2.4s ease-in-out infinite;
+  animation:fire 2.4s ease-in-out infinite,heat-glow 1.7s ease-in-out infinite alternate;
 }
 @keyframes fire{
   0%{background-position:0% 100%}
   50%{background-position:0% 0%}
   100%{background-position:0% 100%}
 }
-.ember{
+@keyframes heat-glow{
+  0%{filter:drop-shadow(0 0 10px rgba(216,84,58,.35)) drop-shadow(0 0 22px rgba(255,107,53,.16))}
+  100%{filter:drop-shadow(0 0 20px rgba(255,140,60,.7)) drop-shadow(0 0 46px rgba(255,107,53,.38))}
+}
+.ember,.spark{
   position:absolute;
   bottom:0;
-  width:4px;height:4px;
-  border-radius:50%;
   pointer-events:none;
   opacity:0;
+  will-change:transform,opacity;
+}
+.ember{
+  border-radius:50%;
   animation:ember-rise linear forwards;
 }
+/* embers float up and wander, flickering as they cool */
 @keyframes ember-rise{
-  0%{opacity:0;transform:translateY(0) scale(1)}
-  10%{opacity:.9}
-  60%{opacity:.6}
-  100%{opacity:0;transform:translateY(-80px) translateX(var(--drift)) scale(0)}
+  0%{opacity:0;transform:translate(0,0) scale(.5)}
+  8%{opacity:1;transform:translate(calc(var(--drift) * .1),calc(var(--rise) * -.1)) scale(1)}
+  26%{opacity:.65}
+  44%{opacity:1;transform:translate(calc(var(--drift) * .5),calc(var(--rise) * -.5)) scale(.9)}
+  62%{opacity:.55}
+  80%{opacity:.85;transform:translate(calc(var(--drift) * .85),calc(var(--rise) * -.85)) scale(.65)}
+  100%{opacity:0;transform:translate(var(--drift),calc(var(--rise) * -1)) scale(.15)}
+}
+.spark{
+  border-radius:40%;
+  animation:spark-fly cubic-bezier(.16,.72,.4,1) forwards;
+}
+/* sparks shoot out fast, arc over, then drop back as they burn out */
+@keyframes spark-fly{
+  0%{opacity:0;transform:translate(0,0) rotate(var(--tilt)) scaleY(.4)}
+  6%{opacity:1;transform:translate(calc(var(--drift) * .14),calc(var(--rise) * -.2)) rotate(var(--tilt)) scaleY(1.2)}
+  55%{opacity:.95;transform:translate(calc(var(--drift) * .68),calc(var(--rise) * -.82)) rotate(var(--tilt)) scaleY(1)}
+  78%{opacity:.7;transform:translate(calc(var(--drift) * .9),calc(var(--rise) * -1)) rotate(var(--tilt)) scaleY(.8)}
+  100%{opacity:0;transform:translate(var(--drift),calc(var(--rise) * -.84)) rotate(var(--tilt)) scaleY(.5)}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero h1 .icy,.hero h1 em{animation:none}
 }
 .hero p{font-size:clamp(1rem,2vw,1.18rem);color:var(--muted);max-width:520px;margin-bottom:36px}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap}

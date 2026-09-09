@@ -502,59 +502,129 @@
     links.classList.remove('open');burger.setAttribute('aria-expanded',false);
   }));
 
-  // Ember particles rising from "Hot Grills"
-  const hotGrills=document.querySelector('.hero h1 em');
-  if(hotGrills && !window.matchMedia('(prefers-reduced-motion:reduce)').matches){
-    const colors=['#D8543A','#E0A852','#F2C063','#FF6B35','#FFAD42'];
-    function spawnEmber(){
-      const e=document.createElement('span');
-      e.className='ember';
-      const size=2+Math.random()*4;
-      const color=colors[Math.floor(Math.random()*colors.length)];
-      const drift=(Math.random()-.5)*30;
-      const dur=1+Math.random()*1.2;
-      e.style.cssText=`
-        left:${Math.random()*100}%;
-        width:${size}px;height:${size}px;
-        background:${color};
-        box-shadow:0 0 ${size+3}px ${color};
-        animation-duration:${dur}s;
-        --drift:${drift}px;
-      `;
-      hotGrills.appendChild(e);
-      e.addEventListener('animationend',()=>e.remove());
-    }
-    setInterval(spawnEmber,120);
-  }
+  // Hero headline particles: sparks off "Hot Grills", snowfall off "Cold Beer"
+  (function(){
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    const hotGrills=document.querySelector('.hero h1 em');
+    const coldBeer=document.querySelector('.hero h1 .icy');
+    if(!hotGrills && !coldBeer) return;
 
-  // Frost particles falling from "Cold Beer"
-  const coldBeer=document.querySelector('.hero h1 .icy');
-  if(coldBeer && !window.matchMedia('(prefers-reduced-motion:reduce)').matches){
-    const crystals=['❄','❆','✦','·'];
+    const rand=(min,max)=>min+Math.random()*(max-min);
+    const pick=list=>list[Math.floor(Math.random()*list.length)];
+
+    // The headline shrinks a long way on phones; scale the particles with it
+    // so they stay proportional instead of swamping the text.
+    const compact=()=>window.innerWidth<700;
+    const k=()=>compact()?.62:1;
+
+    // Each headline line is a full-width block, but the glyphs only fill part
+    // of it. Measure the text itself so particles never spawn in empty space.
+    const spans=new WeakMap();
+    function textWidthPct(el){
+      const node=Array.prototype.find.call(el.childNodes,n=>n.nodeType===3&&n.textContent.trim());
+      const box=el.getBoundingClientRect();
+      if(!node||!box.width) return 100;
+      const range=document.createRange();
+      range.selectNode(node);
+      const text=range.getBoundingClientRect();
+      if(!text.width) return 100;
+      return Math.max(10,Math.min(100,((text.right-box.left)/box.width)*100));
+    }
+    function spawnLeft(el){
+      if(!spans.has(el)) spans.set(el,textWidthPct(el));
+      return rand(1,spans.get(el));
+    }
+    let wasCompact=compact();
+    window.addEventListener('resize',()=>{
+      if(hotGrills) spans.set(hotGrills,textWidthPct(hotGrills));
+      if(coldBeer) spans.set(coldBeer,textWidthPct(coldBeer));
+      if(compact()!==wasCompact){ wasCompact=compact(); restart(); }
+    });
+
+    // Fire: fast streaking sparks plus slower drifting embers
+    const fireColors=['#FFF3D0','#FFD070','#FFAD42','#FF6B35','#D8543A'];
+    function spawnFire(){
+      const el=document.createElement('span');
+      const color=pick(fireColors);
+      const drift=rand(-46,46);
+      // sparks and embers both leave from anywhere across the burning letters
+      const base=`left:${spawnLeft(hotGrills)}%;bottom:${rand(-10,38)}%;--drift:${drift}px;`;
+      if(Math.random()<.55){
+        const len=rand(7,18)*k(), thick=rand(1.2,2.4)*Math.max(.75,k());
+        el.className='spark';
+        el.style.cssText=base+`
+          width:${thick}px;height:${len}px;
+          background:linear-gradient(180deg,#fff 0%,${color} 45%,transparent 100%);
+          box-shadow:0 0 ${len*.7}px ${color};
+          animation-duration:${rand(.7,1.3).toFixed(2)}s;
+          --rise:${rand(95,200)*k()}px;
+          --tilt:${(drift*.32).toFixed(1)}deg;
+        `;
+      }else{
+        const size=rand(2.5,7)*Math.max(.7,k());
+        el.className='ember';
+        el.style.cssText=base+`
+          width:${size}px;height:${size}px;
+          background:${color};
+          box-shadow:0 0 ${size*2.4}px ${size*.4}px ${color};
+          animation-duration:${rand(1.1,2.1).toFixed(2)}s;
+          --rise:${rand(65,140)*k()}px;
+        `;
+      }
+      hotGrills.appendChild(el);
+      el.addEventListener('animationend',()=>el.remove());
+    }
+
+    // Snow: crystals shed from across the frozen letters, swaying as they fall
+    const crystals=['❄','❅','❆','✻','✼','✦','·'];
     function spawnFrost(){
       const f=document.createElement('span');
       f.className='frost';
-      const glyph=crystals[Math.floor(Math.random()*crystals.length)];
-      const size=6+Math.random()*8;
-      const drift=(Math.random()-.5)*24;
-      const spin=Math.random()*180;
-      const dur=1.4+Math.random()*1;
-      f.textContent=glyph;
+      const size=rand(7,18)*k();
+      f.textContent=pick(crystals);
       f.style.cssText=`
-        left:${Math.random()*100}%;
-        top:${60+Math.random()*30}%;
+        left:${spawnLeft(coldBeer)}%;
+        top:${rand(6,86)}%;
         font-size:${size}px;
-        color:rgba(180,225,245,${0.4+Math.random()*0.4});
-        text-shadow:0 0 ${size/2}px rgba(138,212,240,.6);
-        animation-duration:${dur}s;
-        --drift:${drift}px;
-        --spin:${spin}deg;
+        color:rgba(216,244,255,${rand(.55,1).toFixed(2)});
+        text-shadow:0 0 ${(size*.9).toFixed(1)}px rgba(138,212,240,.9);
+        animation-duration:${rand(2.2,4).toFixed(2)}s;
+        --fall:${(rand(90,170)*k()).toFixed(0)}px;
+        --sway:${rand(-26,26).toFixed(1)}px;
+        --drift:${rand(-34,34).toFixed(1)}px;
+        --spin:${rand(-220,220).toFixed(0)}deg;
       `;
       coldBeer.appendChild(f);
       f.addEventListener('animationend',()=>f.remove());
     }
-    setInterval(spawnFrost,180);
-  }
+
+    // Only burn CPU while the hero is actually on screen and the tab is visible
+    let onScreen=true, timers=[];
+    function restart(){ timers.forEach(clearInterval); timers=[]; sync(); }
+    function sync(){
+      const shouldRun=onScreen && !document.hidden;
+      if(shouldRun && !timers.length){
+        if(hotGrills) timers.push(setInterval(()=>{
+          const burst=compact()?1:1+Math.floor(Math.random()*2);
+          for(let i=0;i<burst;i++) spawnFire();
+        },compact()?120:70));
+        if(coldBeer) timers.push(setInterval(spawnFrost,compact()?210:110));
+      }else if(!shouldRun && timers.length){
+        timers.forEach(clearInterval);
+        timers=[];
+      }
+    }
+
+    const hero=document.querySelector('.hero');
+    if(hero && 'IntersectionObserver' in window){
+      new IntersectionObserver(entries=>{
+        onScreen=entries[0].isIntersecting;
+        sync();
+      }).observe(hero);
+    }
+    document.addEventListener('visibilitychange',sync);
+    sync();
+  })();
 
   // Slideshow
   const slides=document.querySelectorAll('.slide');
