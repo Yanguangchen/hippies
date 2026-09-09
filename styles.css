@@ -92,14 +92,192 @@ header{
 .hero .wrap{display:flex;align-items:center;justify-content:space-between;gap:48px;width:100%}
 .hero-inner{max-width:620px;flex-shrink:0}
 .hero-right{position:relative;flex:1;min-width:0}
-.hero-img{
-  width:100%;border-radius:20px;object-fit:cover;
+/* ============================================================
+   HERO STAGE — an SVG loop: beer poured over ice, then a sear.
+   Every beat is a percentage of one shared clock (--hs-loop) so
+   the two scenes stay in step; ambient motion (bubbles, flames,
+   smoke) runs on its own short loops instead.
+   Beer holds 0-40%, hands over 40-48%, grill holds 48-90%,
+   hands back 90-100%.
+   Base (unanimated) styles are the reduced-motion still: a full
+   glass with ice, no pour, no grill.
+   ============================================================ */
+.hero-stage{
+  position:relative;
+  width:100%;
   aspect-ratio:4/3;
-  box-shadow:0 16px 50px rgba(0,0,0,.5);
+  border-radius:20px;
+  overflow:hidden;
   border:1px solid var(--glass-border);
+  box-shadow:0 16px 50px rgba(0,0,0,.5);
+  background:var(--ink-2);
+}
+.hero-svg{
+  --hs-loop:20s;
+  display:block;width:100%;height:100%;
+}
+.hero-stage.hs-paused *{animation-play-state:paused}
+/* Above 1200px the deal card floats over the lower left of the stage, so the
+   scene is composed to the right of it. Below that the card drops out of the
+   way, so bring the composition back to centre. */
+@media(max-width:1200px){
+  .hs-world{transform:translateX(-140px)}
+}
+.hs-scene{transform-box:fill-box;transform-origin:center}
+.hs-beer{animation:hs-beer-scene var(--hs-loop) linear infinite}
+.hs-grill{opacity:0;animation:hs-grill-scene var(--hs-loop) linear infinite}
+@keyframes hs-beer-scene{
+  0%,40%{opacity:1;transform:scale(1)}
+  45%,90%{opacity:0;transform:scale(.92)}
+  100%{opacity:1;transform:scale(1)}
+}
+@keyframes hs-grill-scene{
+  0%,44%{opacity:0;transform:scale(1.08)}
+  50%,92%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(1.08)}
+}
+
+/* a warm flare across each handover */
+.hs-flash{opacity:0;animation:hs-flash var(--hs-loop) linear infinite}
+@keyframes hs-flash{
+  0%,38%{opacity:0}
+  45%{opacity:1}
+  54%,88%{opacity:0}
+  95%{opacity:.5}
+  100%{opacity:0}
+}
+
+/* --- the pour --- */
+.hs-pour{opacity:0;transform-box:fill-box;transform-origin:top center;animation:hs-pour var(--hs-loop) linear infinite}
+@keyframes hs-pour{
+  0%,3%{opacity:0;transform:scaleY(.15)}
+  6%{opacity:1;transform:scaleY(1)}
+  20%{opacity:1;transform:scaleY(1)}
+  24%,100%{opacity:0;transform:scaleY(.45)}
+}
+.hs-stream-hi{transform-box:fill-box;transform-origin:center;animation:hs-stream-wobble .7s ease-in-out infinite}
+@keyframes hs-stream-wobble{
+  0%,100%{transform:scaleX(1) translateX(0)}
+  50%{transform:scaleX(.6) translateX(1.5px)}
+}
+
+/* beer climbing the glass, foam riding the surface */
+.hs-fill{animation:hs-fill var(--hs-loop) cubic-bezier(.32,.02,.36,1) infinite}
+@keyframes hs-fill{
+  0%,4%{transform:translateY(320px)}
+  24%,50%{transform:translateY(0)}
+  58%,100%{transform:translateY(320px)}
+}
+.hs-foam{transform-box:fill-box;transform-origin:center bottom;animation:hs-foam var(--hs-loop) ease-out infinite}
+@keyframes hs-foam{
+  0%,6%{transform:scaleY(.45)}
+  20%{transform:scaleY(1.18)}
+  26%{transform:scaleY(.94)}
+  31%{transform:scaleY(1.05)}
+  37%,100%{transform:scaleY(1)}
+}
+
+.hs-bubbles{animation:hs-bubbles var(--hs-loop) linear infinite}
+@keyframes hs-bubbles{
+  0%,8%{opacity:0}
+  18%,46%{opacity:1}
+  50%,100%{opacity:0}
+}
+.hs-bub{fill:#FFFCF0;fill-opacity:.7;animation:hs-bub-rise 3s linear infinite}
+@keyframes hs-bub-rise{
+  0%{transform:translateY(0) scale(.45);opacity:0}
+  14%{opacity:.9}
+  82%{opacity:.6}
+  100%{transform:translateY(-240px) scale(1.2);opacity:0}
+}
+
+/* ice: dropped in once the glass is full, then bobbing to rest */
+.hs-ice{transform-box:fill-box;transform-origin:center;animation:hs-ice-drop var(--hs-loop) linear infinite}
+@keyframes hs-ice-drop{
+  0%,22%{opacity:0;transform:translateY(-340px) rotate(-42deg)}
+  23%{opacity:1}
+  30%{transform:translateY(16px) rotate(7deg)}
+  33%{transform:translateY(-9px) rotate(-4deg)}
+  36%{transform:translateY(5px) rotate(2deg)}
+  40%,52%{opacity:1;transform:translateY(0) rotate(0)}
+  57%{opacity:0}
+  58%,100%{opacity:0;transform:translateY(-340px) rotate(-42deg)}
+}
+.hs-ripple{
+  fill:none;stroke:#fff;stroke-opacity:.7;stroke-width:2.5;opacity:0;
+  transform-box:fill-box;transform-origin:center;
+  animation:hs-ripple var(--hs-loop) ease-out infinite;
+}
+@keyframes hs-ripple{
+  0%,29%{opacity:0;transform:scale(.25)}
+  31%{opacity:.85;transform:scale(.5)}
+  38%,100%{opacity:0;transform:scale(2.3)}
+}
+
+/* --- the sear --- */
+.hs-steak{transform-box:fill-box;transform-origin:center;animation:hs-steak var(--hs-loop) linear infinite}
+@keyframes hs-steak{
+  0%,44%{transform:translateY(-130px) rotate(-8deg)}
+  52%{transform:translateY(7px) rotate(1deg)}
+  55%{transform:translateY(-5px) rotate(-1deg)}
+  58%,90%{transform:translateY(0) rotate(0)}
+  100%{transform:translateY(-130px) rotate(-8deg)}
+}
+.hs-sear{fill:#2A0F09;opacity:0;animation:hs-sear var(--hs-loop) linear infinite}
+@keyframes hs-sear{
+  0%,52%{opacity:0}
+  62%{opacity:.3}
+  76%,90%{opacity:.82}
+  100%{opacity:0}
+}
+
+/* flames flare when the meat lands, then settle into a burn */
+.hs-flames{opacity:.75;animation:hs-flare var(--hs-loop) ease-out infinite}
+@keyframes hs-flare{
+  0%,48%{opacity:.3}
+  56%{opacity:1}
+  66%{opacity:.68}
+  78%{opacity:.92}
+  90%,100%{opacity:.55}
+}
+.hs-flame{transform-box:fill-box;transform-origin:50% 100%;animation:hs-flicker .9s ease-in-out infinite}
+@keyframes hs-flicker{
+  0%,100%{transform:scale(1,1) translateX(0);opacity:.85}
+  25%{transform:scale(.84,1.24) translateX(-2px);opacity:1}
+  50%{transform:scale(1.14,.84) translateX(2px);opacity:.72}
+  75%{transform:scale(.93,1.13) translateX(-1px);opacity:.96}
+}
+.hs-coal{fill:url("#hsCoal");transform-box:fill-box;transform-origin:center;animation:hs-coal 2.4s ease-in-out infinite}
+@keyframes hs-coal{
+  0%,100%{opacity:.5;transform:scale(.94)}
+  50%{opacity:1;transform:scale(1.07)}
+}
+.hs-spark-dot{fill:#FFD98A;opacity:0;transform-box:fill-box;transform-origin:center;animation:hs-sizzle 1.5s ease-out infinite}
+@keyframes hs-sizzle{
+  0%{opacity:0;transform:translateY(0) scale(.3)}
+  18%{opacity:1;transform:translateY(-12px) scale(1)}
+  100%{opacity:0;transform:translateY(-52px) scale(.2)}
+}
+.hs-smoke-wisp{
+  fill:none;stroke:#F0E8DC;stroke-opacity:.2;stroke-width:22;stroke-linecap:round;
+  filter:url("#hsSmokeBlur");
+  transform-box:fill-box;transform-origin:50% 100%;
+  animation:hs-smoke 5s linear infinite;
+}
+@keyframes hs-smoke{
+  0%{opacity:0;transform:translateY(26px) scale(.45)}
+  20%{opacity:.55}
+  72%{opacity:.26}
+  100%{opacity:0;transform:translateY(-96px) scale(1.55)}
 }
 .hero-right .hero-cards{
   position:absolute;bottom:-30px;left:-30px;
+}
+/* Between the phone layout and a roomy desktop the stage shrinks but the deal
+   card does not, so it swallows the scene. Drop the card below the stage until
+   there is enough width for it to float over the corner. */
+@media(max-width:1200px){
+  .hero-right .hero-cards{position:relative;bottom:auto;left:auto;margin-top:22px}
 }
 .eyebrow{
   display:inline-flex;align-items:center;gap:9px;
@@ -132,25 +310,35 @@ header{
   -webkit-background-clip:text;
   background-clip:text;
   -webkit-text-fill-color:transparent;
-  animation:ice-shimmer 3s ease-in-out infinite;
-  filter:drop-shadow(0 0 8px rgba(138,212,240,.3));
+  animation:ice-shimmer 3s ease-in-out infinite,chill-glow 4s ease-in-out infinite alternate;
+  filter:drop-shadow(0 0 10px rgba(138,212,240,.35));
 }
 @keyframes ice-shimmer{
   0%{background-position:0% 0%}
   50%{background-position:0% 100%}
   100%{background-position:0% 0%}
 }
+@keyframes chill-glow{
+  0%{filter:drop-shadow(0 0 8px rgba(138,212,240,.28))}
+  100%{filter:drop-shadow(0 0 22px rgba(164,226,248,.6))}
+}
 .frost{
   position:absolute;
   pointer-events:none;
   opacity:0;
+  line-height:1;
+  will-change:transform,opacity;
+  /* the heading paints its gradient with -webkit-text-fill-color:transparent,
+     which descendants inherit — restore it or the glyphs never show */
+  -webkit-text-fill-color:currentColor;
   animation:frost-fall linear forwards;
 }
 @keyframes frost-fall{
-  0%{opacity:0;transform:translateY(0) rotate(0deg) scale(1)}
-  15%{opacity:.8}
-  50%{opacity:.5}
-  100%{opacity:0;transform:translateY(60px) translateX(var(--drift)) rotate(var(--spin)) scale(0.3)}
+  0%{opacity:0;transform:translate(0,0) rotate(0deg) scale(.35)}
+  12%{opacity:1;transform:translate(calc(var(--sway) * .35),calc(var(--fall) * .12)) rotate(calc(var(--spin) * .12)) scale(1)}
+  40%{opacity:.95;transform:translate(var(--sway),calc(var(--fall) * .4)) rotate(calc(var(--spin) * .4)) scale(1)}
+  72%{opacity:.75;transform:translate(calc(var(--drift) * .75),calc(var(--fall) * .72)) rotate(calc(var(--spin) * .72)) scale(.88)}
+  100%{opacity:0;transform:translate(var(--drift),var(--fall)) rotate(var(--spin)) scale(.45)}
 }
 .hero h1 em{
   font-style:normal;display:block;position:relative;overflow:visible;
@@ -167,27 +355,52 @@ header{
   -webkit-background-clip:text;
   background-clip:text;
   -webkit-text-fill-color:transparent;
-  animation:fire 2.4s ease-in-out infinite;
+  animation:fire 2.4s ease-in-out infinite,heat-glow 1.7s ease-in-out infinite alternate;
 }
 @keyframes fire{
   0%{background-position:0% 100%}
   50%{background-position:0% 0%}
   100%{background-position:0% 100%}
 }
-.ember{
+@keyframes heat-glow{
+  0%{filter:drop-shadow(0 0 10px rgba(216,84,58,.35)) drop-shadow(0 0 22px rgba(255,107,53,.16))}
+  100%{filter:drop-shadow(0 0 20px rgba(255,140,60,.7)) drop-shadow(0 0 46px rgba(255,107,53,.38))}
+}
+.ember,.spark{
   position:absolute;
   bottom:0;
-  width:4px;height:4px;
-  border-radius:50%;
   pointer-events:none;
   opacity:0;
+  will-change:transform,opacity;
+}
+.ember{
+  border-radius:50%;
   animation:ember-rise linear forwards;
 }
+/* embers float up and wander, flickering as they cool */
 @keyframes ember-rise{
-  0%{opacity:0;transform:translateY(0) scale(1)}
-  10%{opacity:.9}
-  60%{opacity:.6}
-  100%{opacity:0;transform:translateY(-80px) translateX(var(--drift)) scale(0)}
+  0%{opacity:0;transform:translate(0,0) scale(.5)}
+  8%{opacity:1;transform:translate(calc(var(--drift) * .1),calc(var(--rise) * -.1)) scale(1)}
+  26%{opacity:.65}
+  44%{opacity:1;transform:translate(calc(var(--drift) * .5),calc(var(--rise) * -.5)) scale(.9)}
+  62%{opacity:.55}
+  80%{opacity:.85;transform:translate(calc(var(--drift) * .85),calc(var(--rise) * -.85)) scale(.65)}
+  100%{opacity:0;transform:translate(var(--drift),calc(var(--rise) * -1)) scale(.15)}
+}
+.spark{
+  border-radius:40%;
+  animation:spark-fly cubic-bezier(.16,.72,.4,1) forwards;
+}
+/* sparks shoot out fast, arc over, then drop back as they burn out */
+@keyframes spark-fly{
+  0%{opacity:0;transform:translate(0,0) rotate(var(--tilt)) scaleY(.4)}
+  6%{opacity:1;transform:translate(calc(var(--drift) * .14),calc(var(--rise) * -.2)) rotate(var(--tilt)) scaleY(1.2)}
+  55%{opacity:.95;transform:translate(calc(var(--drift) * .68),calc(var(--rise) * -.82)) rotate(var(--tilt)) scaleY(1)}
+  78%{opacity:.7;transform:translate(calc(var(--drift) * .9),calc(var(--rise) * -1)) rotate(var(--tilt)) scaleY(.8)}
+  100%{opacity:0;transform:translate(var(--drift),calc(var(--rise) * -.84)) rotate(var(--tilt)) scaleY(.5)}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero h1 .icy,.hero h1 em{animation:none}
 }
 .hero p{font-size:clamp(1rem,2vw,1.18rem);color:var(--muted);max-width:520px;margin-bottom:36px}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
