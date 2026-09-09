@@ -22,7 +22,7 @@ Hippies Bar & Grill is an honest, unpretentious neighbourhood bar and grill loca
 
 ### Food
 - **Ribeye Steak** — $19.90 nett (house favourite, crowd-favourite cut)
-- **Tobiko Pasta** — $19.00 nett
+- **Tobiko Pasta** — $19.90 nett
 
 - **Loaded Nachos** — $14.00 nett
 - **Shrimp Skewers** — $18.00 nett
@@ -37,12 +37,10 @@ Hippies Bar & Grill is an honest, unpretentious neighbourhood bar and grill loca
 - Stella Artois (pilsner, Belgium)
 
 ### Bottles
-- San Miguel Pilsner — $13 bottle / $40 bucket of 5
 - Corona Extra — $14 bottle / $45 bucket of 5
 
 ### Happy Hour
 - Available daily before 8:00 PM
-- Bucket of 5 San Miguel Pilsners for $40 nett
 
 ### Drinks
 - Full spirits, wine, and cocktail list including gin, rum, whisky, and single malts
@@ -71,7 +69,7 @@ Hippies was born out of a simple frustration: why is it so hard to find an hones
 - [Home](https://hippiesbar.sg/) — Main landing page with menu highlights, beer on tap, reviews, and reservations
 - [About](https://hippiesbar.sg/about.html) — The story behind Hippies Bar & Grill
 - [FAQ](https://hippiesbar.sg/faq.html) — Frequently asked questions about pet policy, reservations, parking, dietary options, and Happy Hour
-- [Full Menu (PDF)](https://hippiesbar.sg/menu.pdf) — Complete food and drinks menu with nett pricing
+- [Full Menu](https://imaginative-sorbet-0f6d13.netlify.app/) — Complete food and drinks menu with nett pricing
 
 ## Contact
 
