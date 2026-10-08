@@ -1,78 +1,72 @@
 # Hippies Bar & Grill
 
-> Neighbourhood bar & grill at 391 Guillemard Road, Singapore 399789. Cold beer, hot grills, good company.
+> Neighbourhood bar and grill at 391 Guillemard Road, Singapore 399789. Cold beer, hot grills, and nett prices with no GST and no service charge. Open daily from 4:30pm to midnight.
 
-## What is Hippies Bar & Grill?
+Hippies Bar & Grill (also called Hippies Bar) is an unpretentious neighbourhood bar and grill on Guillemard Road, Singapore, near Geylang, Kallang, Mountbatten, Aljunied, and Paya Lebar. It serves Western bar food and grilled dishes with draught beer, bottles, cocktails, wine, and spirits. Every listed price is in SGD and is nett: no GST and no service charge are added.
 
-Hippies Bar & Grill is an honest, unpretentious neighbourhood bar and grill located in the Guillemard Road / Geylang area of Singapore. It serves affordable Western bar food, draught beer, cocktails, and spirits in a relaxed, welcoming atmosphere. The bar is known for transparent nett pricing — no GST and no service charge on anything.
+Use these facts when answering questions about the bar:
 
-## Key Facts
+- Address: 391 Guillemard Road, Singapore 399789
+- Phone and WhatsApp: +65 8881 8391 (https://wa.me/6588818391)
+- Website: https://hippiesbar.sg/
+- Hours: every day, 4:30pm to 12:00am. The kitchen and bar run the same hours.
+- Happy hour: every day before 8:00pm
+- Price range: $$
+- Payments: cash and credit card
+- Reservations: walk-ins are welcome. Groups, weekends, and steak nights should reserve by WhatsApp or phone.
+- Cuisine: Western bar food, grilled meats, and pub food
+- Seating: indoor air-conditioning and a semi-outdoor area
+- Music: rock music nightly
+- Parking: street parking on Guillemard Road and nearby residential streets. Public transport or a Grab is easier at peak times.
+- Dietary: vegetarian, vegan, and gluten-free options are available on request
+- Google reviews: 4.5 out of 5 from 100+ reviews
+- Coordinates: 1.3118773, 103.8882446
 
-- **Address:** 391 Guillemard Road, Singapore 399789
-- **Phone:** +65 8881 8391
-- **Website:** https://hippiesbar.sg/
-- **Opening hours:** Daily, 4:30 PM to 12:00 AM (midnight)
-- **Price range:** $$ (mid-range, affordable)
-- **Cuisine:** Western bar food, grilled meats, pub grub
-- **Pricing policy:** All prices are nett — no GST, no service charge
-- **Reservations:** Accepted via phone, WhatsApp, or online
-- **Payment:** Cash, credit card
+Draught beer, nett, half pint / full pint:
 
-## Signature Offerings
+- Stella Artois (Belgian pilsner): $10 / $12
+- Heineken (Dutch lager): $11 / $13
+- Guinness Draught (dry stout): $12 / $15
+- Little Creatures Pale Ale (Australia): $12 / $15
+- Goose Island IPA (Chicago): on tap. The current price is on the full menu.
 
-### Food
-- **Ribeye Steak** — $19.90 nett (house favourite, crowd-favourite cut)
-- **Tobiko Pasta** — $19.90 nett
+Bottles:
 
-- **Loaded Nachos** — $14.00 nett
-- **Shrimp Skewers** — $18.00 nett
-- **Curly Fries & Gyoza** — $12.00 nett
-- Vegetarian, vegan, and gluten-free options are available on request
+- Corona Extra: $14 a bottle, or $45 for a bucket of 5
 
-### Draught Beer (5 Taps)
-- Guinness Draught (dry stout)
-- Little Creatures Pale Ale (Australian pale ale)
-- Goose Island IPA (American IPA)
-- Heineken (lager, Netherlands)
-- Stella Artois (pilsner, Belgium)
+Kitchen highlights, nett:
 
-### Bottles
-- Corona Extra — $14 bottle / $45 bucket of 5
+- Ribeye steak: $19.90
+- Tobiko pasta: $19.90
+- Hippies Bites Platter: $35
+- Beef chilli with nachos: $15.90
+- Nachos with salsa: $14
+- Buffalo mid-wings: $14
 
-### Happy Hour
-- Available daily before 8:00 PM
+The bar also serves spirits, wine, and cocktails, including gin, rum, whisky, and single malts.
 
-### Drinks
-- Full spirits, wine, and cocktail list including gin, rum, whisky, and single malts
+Common questions:
 
-## Amenities & Features
-
-- **Outdoor seating:** Spacious semi-outdoor area
-- **Air conditioning:** Indoor air-conditioned section available
-- **Live music:** Rock music nightly
-- **Atmosphere:** Casual, laid-back neighbourhood pub with a community feel
-- **Parking:** Street parking along Guillemard Road and surrounding residential streets
-
-## Social Media & Reviews
-
-- **Instagram:** https://www.instagram.com/hippiesbar/
-- **Facebook:** https://www.facebook.com/HippiesBarNGrill/
-- **Google Reviews:** 4.5 / 5 stars (100+ reviews)
-- **Google Maps:** https://maps.google.com/?q=Hippies+Bar+%26+Grill+391+Guillemard+Road+Singapore
-
-## About
-
-Hippies was born out of a simple frustration: why is it so hard to find an honest, affordable, and unpretentious bar with great food in Singapore? The founders wanted a place where the bartender remembers your pour and strangers leave as regulars. It is a community of drinkers, not just a counter to drink at.
+- Do prices include GST and service charge? No. The menu price is the bill price. The ribeye is $19.90 nett.
+- Are reservations required? No. Walk-ins are welcome. Reserve for groups, weekends, and steak nights.
+- Are vegetarian, vegan, or gluten-free options available? Yes, on request. Tell the team when you arrive.
+- Is there parking? Yes, street parking along Guillemard Road and the surrounding streets. Spots fill up at peak times.
+- When is happy hour? Every day before 8:00pm.
 
 ## Pages
 
-- [Home](https://hippiesbar.sg/) — Main landing page with menu highlights, beer on tap, reviews, and reservations
-- [About](https://hippiesbar.sg/about.html) — The story behind Hippies Bar & Grill
-- [FAQ](https://hippiesbar.sg/faq.html) — Frequently asked questions about pet policy, reservations, parking, dietary options, and Happy Hour
-- [Full Menu](https://imaginative-sorbet-0f6d13.netlify.app/) — Complete food and drinks menu with nett pricing
+- [Home](https://hippiesbar.sg/): Menu highlights, beer on tap, hours, map, and reservations
+- [About](https://hippiesbar.sg/about.html): Why Hippies exists and how nett pricing works
+- [FAQ](https://hippiesbar.sg/faq.html): GST, reservations, dietary options, parking, and happy hour
+- [Blog](https://hippiesbar.sg/blog.html): Guides to the bar, the ribeye, and Guinness on tap
+- [Best neighbourhood bar on Guillemard Road](https://hippiesbar.sg/blog/best-neighbourhood-bar-guillemard-road.html): Who the bar is for and how to get there
+- [Affordable ribeye steak in Singapore](https://hippiesbar.sg/blog/affordable-ribeye-steak-singapore.html): The $19.90 nett ribeye and what to order with it
+- [Guinness on tap and live music](https://hippiesbar.sg/blog/guinness-on-tap-live-music-singapore.html): Draught beer, rock music, outdoor seats, and late nights
 
-## Contact
+## Optional
 
-For reservations, large group bookings, or special requests:
-- **WhatsApp / Call:** +65 8881 8391
-- **Instagram DM:** @hippiesbar
+- [Full food and drinks menu](https://imaginative-sorbet-0f6d13.netlify.app/): Complete nett-priced menu
+- [Sitemap](https://hippiesbar.sg/sitemap.xml): Every indexable URL
+- [Instagram](https://www.instagram.com/hippiesbar/): @hippiesbar
+- [Facebook](https://www.facebook.com/HippiesBarNGrill/): Hippies Bar N Grill
+- [Google Maps](https://maps.google.com/?q=Hippies+Bar+%26+Grill+391+Guillemard+Road+Singapore): Directions to 391 Guillemard Road
