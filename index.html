@@ -1009,6 +1009,101 @@
     sync();
   })();
 
+  // The hero card turns to look at the pointer. The turn is capped and
+  // eased each frame so it settles instead of sticking to the cursor.
+  (function(){
+    const stage=document.querySelector('.hero-stage');
+    if(!stage) return;
+    const reduce=window.matchMedia('(prefers-reduced-motion:reduce)');
+    const fine=window.matchMedia('(pointer:fine)');
+    if(reduce.matches||!fine.matches) return;
+
+    const maxTilt=12;
+    const damp=0.055;
+    let targetX=0,targetY=0,currentX=0,currentY=0;
+    let pointerX=null,pointerY=null;
+    let looking=true,running=false;
+
+    function pose(){
+      if(reduce.matches){
+        running=false;
+        stage.style.transform='';
+        return;
+      }
+      currentX+=(targetX-currentX)*damp;
+      currentY+=(targetY-currentY)*damp;
+      const settled=Math.abs(targetX-currentX)<0.02&&Math.abs(targetY-currentY)<0.02;
+      if(settled){
+        currentX=targetX;
+        currentY=targetY;
+        running=false;
+      }
+      stage.style.transform='rotateX('+currentX.toFixed(2)+'deg) rotateY('+currentY.toFixed(2)+'deg)';
+      if(running) requestAnimationFrame(pose);
+    }
+    function start(){
+      if(running) return;
+      running=true;
+      requestAnimationFrame(pose);
+    }
+    function aim(x,y){
+      const box=stage.getBoundingClientRect();
+      const reachX=Math.max(window.innerWidth*0.42,box.width);
+      const reachY=Math.max(window.innerHeight*0.42,box.height);
+      let nx=(x-(box.left+box.width/2))/reachX;
+      let ny=(y-(box.top+box.height/2))/reachY;
+      nx=Math.max(-1,Math.min(1,nx));
+      ny=Math.max(-1,Math.min(1,ny));
+      nx=Math.tanh(nx*1.15);
+      ny=Math.tanh(ny*1.15);
+      targetY=nx*maxTilt;
+      targetX=ny*maxTilt;
+      start();
+    }
+
+    window.addEventListener('pointermove',(e)=>{
+      if(e.pointerType&&e.pointerType!=='mouse') return;
+      pointerX=e.clientX;
+      pointerY=e.clientY;
+      if(!looking) return;
+      aim(pointerX,pointerY);
+    },{passive:true});
+    window.addEventListener('pointerleave',()=>{
+      pointerX=null;
+      pointerY=null;
+      targetX=0;
+      targetY=0;
+      start();
+    });
+    window.addEventListener('scroll',()=>{
+      if(!looking||pointerX==null) return;
+      aim(pointerX,pointerY);
+    },{passive:true});
+
+    const hero=document.querySelector('.hero');
+    if(hero&&'IntersectionObserver' in window){
+      new IntersectionObserver((entries)=>{
+        looking=entries[0].isIntersecting;
+        if(!looking){
+          targetX=0;
+          targetY=0;
+          start();
+        }else if(pointerX!=null){
+          aim(pointerX,pointerY);
+        }
+      }).observe(hero);
+    }
+    reduce.addEventListener('change',()=>{
+      if(!reduce.matches) return;
+      targetX=0;
+      targetY=0;
+      currentX=0;
+      currentY=0;
+      stage.style.transform='';
+      running=false;
+    });
+  })();
+
   // Slideshow
   const slides=document.querySelectorAll('.slide');
   const dotsBox=document.querySelector('.slideshow-dots');
