@@ -1,8 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /node_modules/
+
+# Answer-engine index: https://hippiesbar.sg/llms.txt
 
 Sitemap: https://hippiesbar.sg/sitemap.xml
-
-# Assets
-User-agent: *
-Disallow: /node_modules/

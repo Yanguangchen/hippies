@@ -1,45 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://hippiesbar.sg/</loc>
-    <lastmod>2026-06-20</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://hippiesbar.sg/Assets/og.jpg</image:loc>
+      <image:title>Hippies Bar and Grill on Guillemard Road</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://hippiesbar.sg/about.html</loc>
-    <lastmod>2026-06-20</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hippiesbar.sg/Assets/12.webp</image:loc>
+      <image:title>Hippies Bar neon sign</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://hippiesbar.sg/faq.html</loc>
-    <lastmod>2026-06-20</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://hippiesbar.sg/blog.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://hippiesbar.sg/Assets/10.webp</image:loc>
+      <image:title>Hippies Bar and Grill interior</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://hippiesbar.sg/blog/best-neighbourhood-bar-guillemard-road.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://hippiesbar.sg/Assets/10.webp</image:loc>
+      <image:title>Neighbourhood bar on Guillemard Road</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://hippiesbar.sg/blog/affordable-ribeye-steak-singapore.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://hippiesbar.sg/Assets/3.webp</image:loc>
+      <image:title>Ribeye steak at Hippies Bar and Grill</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://hippiesbar.sg/blog/guinness-on-tap-live-music-singapore.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://hippiesbar.sg/Assets/12.webp</image:loc>
+      <image:title>Live music and drinks at Hippies Bar</image:title>
+    </image:image>
   </url>
 </urlset>
