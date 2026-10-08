@@ -133,7 +133,7 @@ header{
 .hero{min-height:100vh;display:flex;align-items:center;position:relative;padding:120px 0 60px}
 .hero .wrap{display:flex;align-items:center;justify-content:space-between;gap:48px;width:100%}
 .hero-inner{max-width:620px;flex-shrink:0}
-.hero-right{position:relative;flex:1;min-width:0}
+.hero-right{position:relative;flex:1;min-width:0;perspective:900px}
 /* ============================================================
    HERO STAGE — an SVG loop: beer poured over ice, then a sear.
    Every beat is a percentage of one shared clock (--hs-loop) so
@@ -153,6 +153,8 @@ header{
   border:1px solid var(--glass-border);
   box-shadow:0 16px 50px rgba(0,0,0,.5);
   background:var(--ink-2);
+  transform-origin:center center;
+  will-change:transform;
 }
 .hero-svg{
   --hs-loop:20s;
