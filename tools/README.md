@@ -32,6 +32,11 @@ Drag horizontally or use arrow keys on the focused canvas to rotate. Home or
 Reset view restores orientation. Pour a pint animates the fill and foam; Pause
 freezes motion. Reduced motion starts paused and pours instantly. Vertical touch
 scrolling is retained. Rendering pauses outside the viewport or in hidden tabs;
-pixel ratio is capped at 1.75. One WebGL context owns the scene, with instanced
+pixel ratio is capped at 1.5 and ambient rendering at 30 fps. One WebGL context owns the scene, with instanced
 bubbles and merged Blender geometry. The existing illustration remains a static
 fallback if WebGL or model loading fails. No external model/CDN request is needed.
+
+The build stamps CSS and JavaScript URLs with content hashes so cached assets
+cannot mix versions after a deployment. Canvas dimensions come from the hero
+container and are set explicitly, avoiding intrinsic-size feedback on high-DPI
+screens even if the canvas stylesheet is unavailable.
