@@ -155,7 +155,7 @@ header{
   min-height:470px;
   background:radial-gradient(ellipse at 50% 45%, #61401c 0%, #241c14 48%, #131310 80%);
   transform-origin:center center;
-  will-change:transform;
+  isolation:isolate;
 }
 .hero-svg{
   --hs-loop:20s;
@@ -980,6 +980,7 @@ footer{padding:50px 0 40px;border-top:1px solid var(--glass-border);margin-top:4
   pointer-events: none;
 }
 .beer-canvas {
+  z-index: 1;
   position: absolute;
   inset: 0;
   width: 100%;
@@ -992,6 +993,7 @@ footer{padding:50px 0 40px;border-top:1px solid var(--glass-border);margin-top:4
 .beer-ready .beer-canvas { opacity: 1; }
 .beer-ready .hero-svg { visibility: hidden; }
 .beer-interface {
+  z-index: 2;
   position: absolute;
   bottom: 22px;
   left: 16px;

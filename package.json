@@ -8,7 +8,7 @@
     "lint:html": "htmlhint \"*.html\" \"blog/*.html\"",
     "lint:css": "stylelint \"*.css\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild src/beer-hero.js --bundle --minify --format=esm --outfile=Assets/js/beer-hero.js"
+    "build": "node tools/build.mjs"
   },
   "repository": {
     "type": "git",

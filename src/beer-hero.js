@@ -12,7 +12,7 @@ const motion = matchMedia('(prefers-reduced-motion: reduce)');
 let renderer;
 try {
   renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = .85;
   const scene = new THREE.Scene();
@@ -34,7 +34,8 @@ try {
   let crownY = 0;
   let paused = motion.matches, visible = true, frame = 0, last = 0, time = 0;
   let yaw = -.28, pitch = -.08, dragging = false, previousX = 0, previousY = 0;
-  let fill = 1, pouring = false;
+  let fill = 1, pouring = false, failed = false;
+  let lastDraw = -Infinity;
   const seeds = Array.from({ length: 70 }, (_, i) => ({
     angle: i * 2.39996, radius: .12 + (i % 11) * .044,
     speed: .22 + (i % 7) * .035, phase: (i * .618) % 1,
@@ -47,6 +48,13 @@ try {
   }
   function render(now = 0) {
     frame = 0;
+    if (failed || !model || !visible || document.hidden) return;
+    // Cap ambient rendering at 30 fps, while direct interaction stays responsive.
+    if (!paused && !dragging && now - lastDraw < 1000 / 30) {
+      frame = requestAnimationFrame(render);
+      return;
+    }
+    lastDraw = now;
     const dt = Math.max(0, (now - last) / 1000 || 0); last = now;
     if (!paused) time += dt;
     if (pouring && !paused) {
@@ -77,16 +85,23 @@ try {
     if (visible && !document.hidden && !paused) frame = requestAnimationFrame(render);
   }
   function invalidate() {
-    if (!frame && visible && !document.hidden) { last = performance.now(); frame = requestAnimationFrame(render); }
+    if (!frame && model && !failed && visible && !document.hidden) { last = performance.now(); frame = requestAnimationFrame(render); }
   }
-  const resize = new ResizeObserver(() => {
-    const { width, height } = canvas.getBoundingClientRect();
-    if (!width || !height) return;
-    renderer.setSize(width, height, false); camera.aspect = width / height;
+  function fitCanvas() {
+    // Measure the container, never the drawing buffer: stale/missing CSS must
+    // not make DPR multiply the canvas dimensions on every observer callback.
+    const width = stage.clientWidth;
+    const height = Math.max(1, stage.clientHeight - 60);
+    if (!width) return;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
     camera.position.z = camera.aspect < 1 ? 7.3 : 6.5;
-    camera.updateProjectionMatrix(); invalidate();
-  });
-  resize.observe(canvas);
+    camera.updateProjectionMatrix();
+    invalidate();
+  }
+  const resize = new ResizeObserver(fitCanvas);
+  resize.observe(stage);
+  fitCanvas();
   new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
     if (!visible) { cancelAnimationFrame(frame); frame = 0; } else invalidate();
@@ -129,7 +144,7 @@ try {
   });
   canvas.addEventListener('webglcontextlost', e => {
     e.preventDefault(); cancelAnimationFrame(frame); frame = 0;
-    paused = true; visible = false; canvas.tabIndex = -1;
+    failed = true; paused = true; visible = false; canvas.tabIndex = -1;
     stage.classList.remove('beer-ready'); status.textContent = 'Cold beer. Good company.';
   });
   new GLTFLoader().load('/Assets/models/beer.glb', gltf => {
@@ -159,7 +174,7 @@ try {
     print.position.y = 1.25; model.add(print);
     canvas.tabIndex = 0; stage.classList.add('beer-ready'); status.textContent = 'Drag to spin · make yourself at home';
     updateButtons(); invalidate();
-  }, undefined, () => { paused = true; visible = false; cancelAnimationFrame(frame); frame = 0; status.textContent = 'Cold beer. Good company.'; renderer.dispose(); resize.disconnect(); });
+  }, undefined, () => { failed = true; paused = true; visible = false; cancelAnimationFrame(frame); frame = 0; status.textContent = 'Cold beer. Good company.'; renderer.dispose(); resize.disconnect(); });
 } catch {
   status.textContent = 'Cold beer. Good company.';
   renderer?.dispose();
