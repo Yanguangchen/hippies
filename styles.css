@@ -152,7 +152,8 @@ header{
   overflow:hidden;
   border:1px solid var(--glass-border);
   box-shadow:0 16px 50px rgba(0,0,0,.5);
-  background:var(--ink-2);
+  min-height:470px;
+  background:radial-gradient(ellipse at 50% 45%, #61401c 0%, #241c14 48%, #131310 80%);
   transform-origin:center center;
   will-change:transform;
 }
@@ -962,4 +963,66 @@ footer{padding:50px 0 40px;border-top:1px solid var(--glass-border);margin-top:4
   .blog-grid{grid-template-columns:1fr}
   .blog-card img{height:210px}
   .article-content{padding:28px}
+}
+
+/* Interactive Blender / Three.js hero. The SVG remains a static fallback. */
+.hero-stage .hero-svg * { animation: none; }
+.beer-heading {
+  position: absolute;
+  inset: 24px 24px auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #d7bb87;
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  z-index: 2;
+  pointer-events: none;
+}
+.beer-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: calc(100% - 60px);
+  opacity: 0;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.beer-canvas:active { cursor: grabbing; }
+.beer-ready .beer-canvas { opacity: 1; }
+.beer-ready .hero-svg { visibility: hidden; }
+.beer-interface {
+  position: absolute;
+  bottom: 22px;
+  left: 16px;
+  right: 16px;
+  text-align: center;
+}
+.hero .beer-status {
+  font-size: 11px;
+  letter-spacing: .5px;
+  margin: 0 0 14px;
+  max-width: none;
+  color: #c4b6a1;
+}
+.beer-controls { display: none; justify-content: center; gap: 8px; }
+.beer-ready .beer-controls { display: flex; }
+.beer-controls button {
+  min-height: 44px;
+  border: 1px solid #756044;
+  border-radius: 30px;
+  background: #211c16;
+  color: #f5e3bd;
+  padding: 10px 15px;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.beer-controls button:first-child { background: #e3af58; color: #21170b; border-color: #e3af58; }
+.beer-controls button:hover { filter: brightness(1.18); }
+.beer-controls button:disabled { opacity: .6; cursor: wait; }
+.beer-controls button:focus-visible, .beer-canvas:focus-visible { outline: 2px solid #ffda8d; outline-offset: -3px; }
+@media (max-width: 600px) {
+  .hero-stage { min-height: 450px; }
+  .beer-heading { inset: 20px 18px auto; font-size: 8px; }
 }
