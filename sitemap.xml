@@ -58,6 +58,16 @@
     </image:image>
   </url>
   <url>
+    <loc>https://hippiesbar.sg/blog/happy-hour-before-8pm-guillemard-road.html</loc>
+    <lastmod>2026-10-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://hippiesbar.sg/Assets/12.webp</image:loc>
+      <image:title>Happy hour at Hippies Bar and Grill</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://hippiesbar.sg/blog/guinness-on-tap-live-music-singapore.html</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
