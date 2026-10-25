@@ -1,43 +1,79 @@
 const { test, expect } = require('@playwright/test');
 
-test('3D beer loads, rotates with the keyboard, pauses, resets and pours', async ({ page }) => {
+async function countDraws(page) {
+  await page.addInitScript(() => {
+    window.heroDraws = 0;
+    for (const method of ['drawElements', 'drawArrays', 'drawElementsInstanced', 'drawArraysInstanced']) {
+      const original = WebGL2RenderingContext.prototype[method];
+      WebGL2RenderingContext.prototype[method] = function (...args) {
+        if (this.canvas.classList.contains('beer-canvas')) window.heroDraws++;
+        return original.apply(this, args);
+      };
+    }
+  });
+}
+
+test('tap pours, ice drops, and the sequence repeats without controls', async ({ page }) => {
   test.setTimeout(60000);
+  // Freeze time so software-rendered screenshots cannot skip a short phase.
+  await page.clock.install({ time: new Date(0) });
+  await page.clock.pauseAt(new Date(1000));
   await page.goto('/');
-  await expect(page.locator('.hero-stage')).toHaveClass(/beer-ready/);
-  const canvas = page.locator('.beer-canvas');
-  await page.getByRole('button', { name: 'Pause', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Play', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  const before = await canvas.screenshot();
-  await canvas.focus();
-  await canvas.press('ArrowRight');
-  const after = await canvas.screenshot();
-  expect(before.equals(after)).toBeFalsy();
-  await page.getByRole('button', { name: 'Reset view' }).click();
-  await page.getByRole('button', { name: 'Pour a pint' }).click();
-  await expect(page.getByRole('button', { name: 'Pour a pint' })).toBeDisabled();
-  await expect(page.locator('.beer-status')).toHaveText('Freshly poured. Cheers.', { timeout: 15000 });
-  await expect(page.getByRole('button', { name: 'Pour a pint' })).toBeEnabled();
+  const stage = page.locator('.hero-stage');
+  await expect(stage).toHaveClass(/beer-ready/);
+  await expect(stage.getByRole('button')).toHaveCount(0);
+  await page.clock.runFor(40);
+  await page.clock.fastForward(2000); await page.clock.runFor(40);
+  await expect(stage).toHaveAttribute('data-beer-phase', 'pouring');
+  const pouring = await page.locator('.beer-canvas').screenshot();
+  await page.clock.fastForward(3500); await page.clock.runFor(40);
+  await expect(stage).toHaveAttribute('data-beer-phase', 'ice');
+  const ice = await page.locator('.beer-canvas').screenshot();
+  expect(pouring.equals(ice)).toBeFalsy();
+  await page.clock.fastForward(2500); await page.clock.runFor(40);
+  await expect(stage).toHaveAttribute('data-beer-phase', 'hold');
+  await page.clock.fastForward(5000); await page.clock.runFor(40);
+  await expect(stage).toHaveAttribute('data-beer-cycle', '1');
+  await expect(stage).toHaveAttribute('data-beer-phase', 'pouring');
 });
 
-test('mobile reduced motion starts paused and keeps controls in bounds', async ({ page }) => {
+test('mobile reduced motion renders a still pint and keyboard rotation remains available', async ({ page }) => {
+  await countDraws(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  await page.locator('.hero-stage').scrollIntoViewIfNeeded();
-  await expect(page.locator('.hero-stage')).toHaveClass(/beer-ready/);
-  await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Pour a pint' }).click();
-  await expect(page.locator('.beer-status')).toHaveText('Freshly poured. Cheers.');
-  const box = await page.locator('.beer-controls').boundingBox();
-  expect(box.x).toBeGreaterThanOrEqual(0);
-  expect(box.x + box.width).toBeLessThanOrEqual(390);
+  const stage = page.locator('.hero-stage');
+  await stage.scrollIntoViewIfNeeded();
+  await expect(stage).toHaveAttribute('data-beer-phase', 'hold');
+  await expect(stage.getByRole('button')).toHaveCount(0);
+  const canvas = page.locator('.beer-canvas');
+  const before = await canvas.screenshot();
+  const calls = await page.evaluate(() => window.heroDraws);
+  expect(calls).toBeGreaterThan(0);
+  await page.waitForTimeout(350);
+  expect(await page.evaluate(() => window.heroDraws)).toBe(calls);
+  await canvas.focus(); await canvas.press('ArrowRight');
+  const after = await canvas.screenshot();
+  expect(before.equals(after)).toBeFalsy();
 });
 
-test('failed model loading preserves the illustration and hides unavailable controls', async ({ page }) => {
-  await page.route('**/Assets/models/beer.glb', route => route.abort());
+test('the GPU stops rendering when the hero leaves the viewport', async ({ page }) => {
+  await countDraws(page);
+  await page.goto('/');
+  await expect(page.locator('.hero-stage')).toHaveAttribute('data-beer-phase', 'pouring', { timeout: 10000 });
+  await page.locator('footer').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(150);
+  const calls = await page.evaluate(() => window.heroDraws);
+  await page.waitForTimeout(400);
+  expect(await page.evaluate(() => window.heroDraws)).toBe(calls);
+  await page.locator('.hero-stage').scrollIntoViewIfNeeded();
+  await expect.poll(() => page.evaluate(() => window.heroDraws)).toBeGreaterThan(calls);
+});
+
+test('failed model loading preserves the illustration', async ({ page }) => {
+  await page.route('**/Assets/models/beer.glb*', route => route.abort());
   await page.goto('/');
   await expect(page.locator('.hero-svg')).toBeVisible();
-  await expect(page.locator('.beer-controls')).toBeHidden();
   await expect(page.locator('.hero-stage')).not.toHaveClass(/beer-ready/);
 });
 
@@ -54,7 +90,7 @@ test.describe('cached styles and high-DPI sizing', () => {
     await expect(canvas).toHaveCSS('opacity', '1');
     const sizes = await canvas.evaluate(c => ({ buffer: c.width, width: c.getBoundingClientRect().width, container: c.parentElement.clientWidth }));
     expect(sizes.width).toBe(sizes.container);
-    expect(sizes.buffer).toBeLessThanOrEqual(sizes.container * 1.5);
+    expect(sizes.buffer).toBeLessThanOrEqual(sizes.container);
     const centerOwnsCanvas = await canvas.evaluate(c => {
       const r = c.getBoundingClientRect();
       return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === c;

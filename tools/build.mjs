@@ -2,9 +2,11 @@ import { build } from 'esbuild';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile, readdir } from 'node:fs/promises';
 
-await build({ entryPoints: ['src/beer-hero.js'], bundle: true, minify: true,
-  format: 'esm', outfile: 'Assets/js/beer-hero.js' });
 const hash = async path => createHash('sha256').update(await readFile(path)).digest('hex').slice(0, 12);
+const modelVersion = await hash('Assets/models/beer.glb');
+await build({
+  define: { __BEER_MODEL_URL__: JSON.stringify(`/Assets/models/beer.glb?v=${modelVersion}`) }, entryPoints: ['src/beer-hero.js'], bundle: true, minify: true,
+  format: 'esm', outfile: 'Assets/js/beer-hero.js' });
 const cssVersion = await hash('styles.css');
 const jsVersion = await hash('Assets/js/beer-hero.js');
 for (const directory of ['.', 'blog']) {
