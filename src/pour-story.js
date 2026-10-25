@@ -1,4 +1,4 @@
-// Scroll choreography for the hero pint. Once scrolling starts, the stage moves
+// Scroll choreography for the hero beer mug. Once scrolling starts, the stage moves
 // into a sticky viewport inside #taps, glides to its centre, and the taps
 // heading eases in beneath it. The renderer reads `state` to frost the glass
 // and pour while the pin holds. Vertical pinning is native sticky positioning;
@@ -6,7 +6,7 @@
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const smooth = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
 const easeOut = t => 1 - (1 - clamp(t, 0, 1)) ** 3;
-// Scroll distance, in viewport heights, from the centred pint to the pin release.
+// Scroll distance, in viewport heights, from the centred mug to the pin release.
 const REVEAL_VIEWPORTS = 2.5;
 
 export function createPourStory(stage, onChange) {
@@ -21,7 +21,7 @@ export function createPourStory(stage, onChange) {
   const state = { on: false, glide: 0, pour: 0 };
   let wanted = false, metrics = null, target = 0, value = 0, raf = 0, last = 0, pending = 0;
 
-  // Document-pixel layout for the current viewport, or null when the pint and
+  // Document-pixel layout for the current viewport, or null when the mug and
   // heading cannot share one screen (landscape phones keep the static page).
   function measure() {
     const y = scrollY, height = root.clientHeight, width = root.clientWidth;
@@ -57,7 +57,7 @@ export function createPourStory(stage, onChange) {
     const glide = clamp(value / m.glide, 0, 1), pour = clamp((value - m.glide) / m.reveal, 0, 1);
     const e = smooth(glide);
     stage.style.transform = `translate3d(${m.fromX + (m.toX - m.fromX) * e}px,${m.fromY + (m.toY - m.fromY) * e}px,0) scale(${1 + (m.scale - 1) * e})`;
-    // The hero copy steps aside only when the pint crosses it on the way to the centre.
+    // The hero copy steps aside only when the mug crosses it on the way to the centre.
     heroText.style.opacity = m.fade ? (1 - smooth(glide * 1.4)).toFixed(3) : '';
     const title = easeOut(pour / .2), sub = easeOut((pour - .38) / .14);
     pin.style.setProperty('--pour-title', title.toFixed(3));

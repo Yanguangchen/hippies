@@ -125,6 +125,17 @@ test('failed model loading preserves the illustration', async ({ page }) => {
   await expect(page.locator('.hero-right > .hero-stage')).toHaveCount(1);
 });
 
+test('the model is a handled beer mug under a chrome tower tap', async ({ request }) => {
+  const glb = await (await request.get('/Assets/models/beer.glb')).body();
+  const json = JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString());
+  const mesh = name => json.meshes[json.nodes.find(node => node.name === name).mesh];
+  const bounds = name => json.accessors[mesh(name).primitives[0].attributes.POSITION];
+  // The handle reaches well past the mug's round body on one side.
+  expect(bounds('Mug').max[0]).toBeGreaterThan(bounds('Mug').max[2] + .5);
+  expect(mesh('TapHandle').primitives.map(p => json.materials[p.material].name).sort()).toEqual(['Brass', 'Chrome', 'HandleBlack']);
+  expect(bounds('Tap').max[1]).toBeGreaterThan(bounds('Mug').max[1] + 1);
+});
+
 async function scrollAndSettle(page, top) {
   await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), top);
   await page.clock.runFor(1200);

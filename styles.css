@@ -894,9 +894,10 @@ footer{padding:50px 0 40px;border-top:1px solid var(--glass-border);margin-top:4
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  color: #d7bb87;
-  font-size: 9px;
-  letter-spacing: 1.8px;
+  color: var(--amber);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .2em;
   z-index: 2;
   pointer-events: none;
 }
@@ -916,7 +917,7 @@ footer{padding:50px 0 40px;border-top:1px solid var(--glass-border);margin-top:4
 .beer-canvas:focus-visible { outline: 2px solid #ffda8d; outline-offset: -3px; }
 @media (max-width: 600px) {
   .hero-stage { min-height: 450px; }
-  .beer-heading { inset: 20px 18px auto; font-size: 8px; }
+  .beer-heading { inset: 20px 18px auto; font-size: .56rem; }
 }
 
 /* Scroll story: the hero pint glides to the centre of a pinned viewport, frosts,
