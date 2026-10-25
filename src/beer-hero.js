@@ -8,19 +8,18 @@ const LOOP_SECONDS = 12;
 let renderer;
 
 try {
-  // Keep the render target small and use unlit colors: no lights or reflections.
-  renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: 'low-power' });
-  renderer.setPixelRatio(.85);
+  // Smooth silhouettes at native resolution; surfaces stay unlit and matte.
+  renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, .1, 20);
   camera.position.set(0, 1.2, 8);
   camera.lookAt(0, 0, 0);
   const glassMaterial = new THREE.MeshBasicMaterial({ color: 0xa7c2c8, transparent: true, opacity: .16, depthWrite: false });
-  const beerMaterial = new THREE.MeshBasicMaterial({ color: 0xd79827, vertexColors: true });
-  const foamMaterial = new THREE.MeshBasicMaterial({ color: 0xffefd0, vertexColors: true });
-  const tapMaterial = new THREE.MeshBasicMaterial({ color: 0x9e9586, vertexColors: true });
-  const iceMaterial = new THREE.MeshBasicMaterial({ color: 0xb5e8ff, vertexColors: true });
-  const handleMaterial = new THREE.MeshBasicMaterial({ color: 0x704222, vertexColors: true });
+  const beerMaterial = new THREE.MeshBasicMaterial({ color: 0xd79827, vertexColors: true, transparent: false, opacity: 1 });
+  const foamMaterial = new THREE.MeshBasicMaterial({ color: 0xffefd0, vertexColors: true, transparent: false, opacity: 1 });
+  const tapMaterial = new THREE.MeshBasicMaterial({ color: 0x9e9586, vertexColors: true, transparent: false, opacity: 1 });
+  const iceMaterial = new THREE.MeshBasicMaterial({ color: 0xb5e8ff, vertexColors: true, transparent: false, opacity: 1 });
+  const handleMaterial = new THREE.MeshBasicMaterial({ color: 0x704222, vertexColors: true, transparent: false, opacity: 1 });
   // Bake a simple directional tint once, so depth is readable without per-frame lighting.
   function shadeGeometry(geometry) {
     const normals = geometry.attributes.normal;
@@ -112,7 +111,7 @@ try {
   function fitCanvas() {
     const width = stage.clientWidth, height = Math.max(1, stage.clientHeight - 52);
     if (!width) return;
-    renderer.setPixelRatio(Math.min(.85, 420 / Math.max(width, height)));
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.25, 1024 / Math.max(width, height)));
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.position.z = camera.aspect < .8 ? 8.7 : 8;
@@ -181,7 +180,7 @@ try {
     ctx.font = '14px sans-serif'; ctx.fillText('B A R   &   G R I L L', 256, 148);
     ctx.fillRect(160, 170, 192, 1);
     const texture = new THREE.CanvasTexture(label); texture.colorSpace = THREE.SRGBColorSpace;
-    const print = new THREE.Mesh(new THREE.CylinderGeometry(.745, .685, .7, 24, 1, true, -.9, 1.8), new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false }));
+    const print = new THREE.Mesh(new THREE.CylinderGeometry(.745, .685, .7, 24, 1, true, -.9, 1.8), new THREE.MeshBasicMaterial({ map: texture, alphaTest: .5, transparent: false, depthWrite: false }));
     print.position.y = 1.25; pint.add(print);
     canvas.tabIndex = 0; stage.classList.add('beer-ready'); requestDraw();
   }, undefined, fallback);
