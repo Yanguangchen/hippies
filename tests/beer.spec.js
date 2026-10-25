@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect, devices } = require('@playwright/test');
 
 async function countDraws(page) {
   await page.addInitScript(() => {
@@ -136,13 +136,14 @@ test('the model is a handled beer mug under a chrome tower tap', async ({ reques
   expect(bounds('Tap').max[1]).toBeGreaterThan(bounds('Mug').max[1] + 1);
 });
 
-async function scrollAndSettle(page, top) {
+async function scrollAndSettle(page, top, settle = 1200) {
   await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), top);
-  await page.clock.runFor(1200);
+  await page.clock.runFor(settle);
 }
 
-test('scrolling centres the pint, reveals the heading, frosts it, pours, then reaches the cards', async ({ page }) => {
-  test.setTimeout(90000);
+test('scrolling centres the mug, reveals the heading, frosts it, pours, then reaches the cards', async ({ page }) => {
+  // Headless WebGL renders on the CPU, so walking every frame of the story is slow here.
+  test.setTimeout(180000);
   await countDraws(page);
   await page.clock.install({ time: new Date(0) });
   await page.clock.pauseAt(new Date(1000));
@@ -156,11 +157,11 @@ test('scrolling centres the pint, reveals the heading, frosts it, pours, then re
   expect(heroBox.x).toBeGreaterThan(viewport.width / 2);
   const end = await page.locator('.taps-grid').evaluate(grid => grid.getBoundingClientRect().top + scrollY);
 
-  // Walk the story in tenth-of-a-viewport steps and record what each scroll position shows.
+  // Walk the story in short steps (each story beat spans at least two) and record what each shows.
   const order = ['hero', 'glide', 'title', 'frost', 'subtitle', 'pour', 'poured'];
   const seen = [], shots = {}, centred = [];
-  for (let top = 0; top < end; top += viewport.height / 10) {
-    await scrollAndSettle(page, top);
+  for (let top = 0; top < end; top += viewport.height * .15) {
+    await scrollAndSettle(page, top, 700);
     const step = await stage.getAttribute('data-pour-step');
     const { title, sub } = await page.evaluate(() => ({
       title: Number(getComputedStyle(document.querySelector('.pour-copy .sec-title')).opacity),
@@ -219,6 +220,28 @@ test('the poured pint stops rendering once the story scrolls away', async ({ pag
   const calls = await page.evaluate(() => window.heroDraws);
   await page.waitForTimeout(400);
   expect(await page.evaluate(() => window.heroDraws)).toBe(calls);
+});
+
+test.describe('on a phone', () => {
+  // A real mobile profile: phones widen the layout to fit overflowing content,
+  // which desktop Chromium at phone width hides behind body { overflow-x: hidden }.
+  const { defaultBrowserType, ...phone } = devices['iPhone 13'];
+  test.use(phone);
+
+  test('the scroll story runs without widening the page', async ({ page }) => {
+    await page.goto('/');
+    const stage = page.locator('.hero-stage');
+    await expect(stage).toHaveClass(/beer-ready/);
+    await expect(page.locator('html')).toHaveClass(/pour-on/);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+    const end = await page.locator('.taps-grid').evaluate(grid => grid.getBoundingClientRect().top + scrollY);
+    for (const [fraction, step] of [[.45, 'frost'], [.92, 'poured']]) {
+      await page.evaluate(top => window.scrollTo({ top, behavior: 'instant' }), end * fraction);
+      await expect(stage).toHaveAttribute('data-pour-step', step);
+    }
+    await expect(stage).toBeInViewport();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  });
 });
 
 test('a landscape phone keeps the static layout when the pint and heading cannot share the screen', async ({ page }) => {

@@ -13,58 +13,42 @@ const SPOUT_X = -.17, SPOUT_TIP = 2.814;
 let renderer;
 
 try {
-  // Smooth silhouettes at native resolution; surfaces stay unlit and matte.
+  // Smooth silhouettes at native resolution.
   renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, .1, 20);
   camera.position.set(0, 1.2, 8.8);
   camera.lookAt(0, 0, 0);
-  // Matcaps give chrome, brass and gloss from one texture lookup: no lights or reflection maps.
-  // Bands across the middle row light vertical tubes; the sky-to-floor gradient lights horizontal ones.
-  function matcap(sky, horizon, floor, strip) {
-    const c = document.createElement('canvas'); c.width = c.height = 256;
-    const g = c.getContext('2d'), fill = (style, x, y, w, h) => { g.fillStyle = style; g.fillRect(x, y, w, h); };
-    const gradient = g.createLinearGradient(0, 0, 0, 256);
-    gradient.addColorStop(0, sky); gradient.addColorStop(.46, horizon); gradient.addColorStop(.52, floor);
-    gradient.addColorStop(.6, horizon); gradient.addColorStop(1, floor);
-    fill(gradient, 0, 0, 256, 256);
-    for (const [x, w, a] of [[58, 34, .95], [178, 16, .55]]) {
-      const band = g.createLinearGradient(x - w, 0, x + w, 0);
-      band.addColorStop(0, 'rgba(255,255,255,0)'); band.addColorStop(.5, `rgba(${strip},${a})`); band.addColorStop(1, 'rgba(255,255,255,0)');
-      fill(band, x - w, 0, w * 2, 256);
-    }
-    const rim = g.createRadialGradient(128, 128, 96, 128, 128, 128);
-    rim.addColorStop(0, 'rgba(0,0,0,0)'); rim.addColorStop(1, 'rgba(0,0,0,.6)');
-    fill(rim, 0, 0, 256, 256);
-    const texture = new THREE.CanvasTexture(c); texture.colorSpace = THREE.SRGBColorSpace;
-    return texture;
+  // A small bar of warm and cool light panels, prefiltered once, gives chrome and glass
+  // something real to reflect. Image-based only: no runtime lights or image downloads.
+  const studio = new THREE.Scene();
+  studio.add(new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshBasicMaterial({ color: 0x3a3029, side: THREE.BackSide })));
+  const barTop = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshBasicMaterial({ color: 0x4f3622 }));
+  barTop.rotation.x = -Math.PI / 2; barTop.position.y = -4.8; studio.add(barTop);
+  for (const [w, h, color, power, x, y, z, rx, ry] of [
+    [6, 3, 0xfff1dc, 4, 0, 4.9, 0, Math.PI / 2, 0], [.7, 8, 0xffe2b0, 6, -4.9, 0, 1, 0, Math.PI / 2],
+    [.45, 8, 0xdfeaff, 4.5, 4.9, .5, -1, 0, -Math.PI / 2], [4, 1.2, 0xffb347, 2.5, 0, -1.5, -4.9, 0, 0],
+    [2.2, 4, 0xffffff, 2.2, 2, 1, 4.9, 0, Math.PI]]) {
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(power), side: THREE.DoubleSide }));
+    panel.position.set(x, y, z); panel.rotation.set(rx, ry, 0); studio.add(panel);
   }
-  const chromeMaterial = new THREE.MeshMatcapMaterial({ matcap: matcap('#fbfaf7', '#8d8983', '#24221f', '255,255,255') });
-  const brassMaterial = new THREE.MeshMatcapMaterial({ matcap: matcap('#fff1c9', '#b98a45', '#3a2611', '255,240,200') });
-  const gripMaterial = new THREE.MeshMatcapMaterial({ matcap: matcap('#4a4540', '#191715', '#070606', '200,190,175') });
-  const iceMaterial = new THREE.MeshMatcapMaterial({ matcap: matcap('#ffffff', '#a9dcf3', '#5a9cc0', '255,255,255') });
-  // Glass reads by its edges: a Fresnel rim plus two soft strip reflections that ride the flutes.
-  const glassMaterial = new THREE.ShaderMaterial({
-    uniforms: { tint: { value: new THREE.Color(0xa7c2c8) }, opacity: { value: .06 } }, transparent: true, depthWrite: false,
-    vertexShader: `varying vec3 vNormal; varying vec3 vView;
-      void main() {
-        vec4 view = modelViewMatrix * vec4(position, 1.0);
-        vNormal = normalize(normalMatrix * normal); vView = -view.xyz;
-        gl_Position = projectionMatrix * view;
-      }`,
-    fragmentShader: `uniform vec3 tint; uniform float opacity; varying vec3 vNormal; varying vec3 vView;
-      void main() {
-        vec3 n = normalize(vNormal);
-        float rim = pow(1.0 - abs(dot(n, normalize(vView))), 3.0);
-        float strips = smoothstep(0.42, 0.5, n.x) * (1.0 - smoothstep(0.58, 0.68, n.x))
-          + 0.55 * smoothstep(-0.62, -0.56, n.x) * (1.0 - smoothstep(-0.5, -0.44, n.x));
-        gl_FragColor = vec4(mix(tint, vec3(1.0), min(1.0, rim + strips)), min(opacity + rim * 0.6 + strips * 0.35, 0.88));
-        #include <colorspace_fragment>
-      }`,
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(studio, .02).texture;
+  pmrem.dispose();
+  studio.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); });
+  const chromeMaterial = new THREE.MeshStandardMaterial({ color: 0xf4f4f4, metalness: 1, roughness: .07 });
+  const brassMaterial = new THREE.MeshStandardMaterial({ color: 0xd9a95a, metalness: 1, roughness: .2 });
+  const gripMaterial = new THREE.MeshStandardMaterial({ color: 0x151312, metalness: 0, roughness: .26 });
+  const iceMaterial = new THREE.MeshStandardMaterial({ color: 0xd8f1ff, emissive: 0x2e5f7a, emissiveIntensity: .4, metalness: 0, roughness: .06 });
+  // Clear glass: a black, very smooth dielectric whose reflections are added over the page
+  // (premultiplied: colour plus a faint darkening), so edges and flutes catch the light
+  // while the body stays see-through.
+  const glassMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0x000000, metalness: 0, roughness: .03, ior: 1.5, envMapIntensity: 1.5, opacity: .06,
+    transparent: true, depthWrite: false, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
   });
   const beerMaterial = new THREE.MeshBasicMaterial({ color: 0xd79827, vertexColors: true, transparent: false, opacity: 1 });
   const foamMaterial = new THREE.MeshBasicMaterial({ color: 0xffefd0, vertexColors: true, transparent: false, opacity: 1 });
-  const glassTint = new THREE.Color(0xa7c2c8), frostTint = new THREE.Color(0xe4f6ff);
   // Frost climbs the glass from the base during the scroll story, then thins where beer
   // fills behind it. 3D noise on the lathe's own positions needs no UVs and has no seam;
   // ridged noise reads as crystals.
@@ -218,8 +202,7 @@ try {
     const frosted = scrolled ? ease((pour - .12) / .28) : 0;
     frost.visible = frosted > 0; frostMaterial.uniforms.frost.value = frosted;
     frostMaterial.uniforms.wet.value = scrolled ? poured : 0; frostMaterial.uniforms.beerTop.value = surface + .12;
-    glassMaterial.uniforms.tint.value.lerpColors(glassTint, frostTint, frosted);
-    glassMaterial.uniforms.opacity.value = .06 + .12 * frosted;
+    glassMaterial.opacity = .06 + .12 * frosted;
     bubbles.visible = scrolled && poured > .08;
     if (bubbles.visible) riseBubbles(surface);
     return t;
