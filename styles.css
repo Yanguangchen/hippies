@@ -937,3 +937,29 @@ footer{padding:50px 0 40px;border-top:1px solid var(--glass-border);margin-top:4
 @media (max-width: 600px) {
   .pour-on .hero-right::before { min-height: 450px; }
 }
+
+/* Card deck: the beer cards wait as a stack in a pinned viewport, fan out, deal into
+   their row showing only the names, then open in turn. Scripts add .deck-on, the
+   layout offsets, and each card's transform and --grow; without it the grid is as usual. */
+.deck-on .deck-story { position: relative; }
+.deck-on .deck-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; clip-path: inset(var(--deck-clip, 0) 0 0 0); }
+.deck-on .deck-pin > .wrap { position: absolute; top: 0; right: 0; left: 0; }
+.deck-on .taps-grid { grid-template-columns: repeat(var(--deck-cols, 5), minmax(0, 1fr)); align-items: start; }
+.deck-on .tap {
+  position: relative;
+  background: #221f1a;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 0 18px 40px rgba(0,0,0,.35);
+  transition: border-color .25s, background .25s;
+  will-change: transform;
+}
+.deck-on .tap:hover { transform: none; background: #29251f; }
+.deck-on .tap-more { height: calc(var(--more-h, 0px) * var(--grow, 0)); overflow: hidden; opacity: var(--grow, 0); }
+.deck-on .tap-more > * { transform: translateY(calc(10px * (1 - var(--grow, 0)))); }
+.deck-on .deck-list .taps-grid { gap: 10px; }
+.deck-on .deck-list .tap { display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 14px; padding: 14px 16px; }
+.deck-on .deck-list .tap .icon { grid-row: 1 / span 2; width: 40px; height: 40px; margin: 0; font-size: 1.2rem; }
+.deck-on .deck-list .tap h3 { margin: 0; font-size: 1.25rem; line-height: 40px; }
+.deck-on .deck-list .tap-more { grid-column: 2; }
+.deck-on .deck-list .tap .origin { margin-top: 8px; }

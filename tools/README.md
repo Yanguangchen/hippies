@@ -17,6 +17,7 @@ redrawn once those fonts load.
 - `Assets/models/beer.glb`: web model (~180 KiB, 8,484 triangles).
 - `src/beer-hero.js`: scene, lightweight materials, and animation.
 - `src/pour-story.js`: scroll choreography that pins the mug over the taps heading.
+- `src/card-deck.js`: scroll choreography that deals the beer cards out of a stack.
 - `Assets/js/beer-hero.js`: committed browser bundle, including Three.js.
 
 Rebuild the model from the repository root:
@@ -71,6 +72,25 @@ failure, a stylesheet without the pin rules, and screens too short to fit the
 mug above the heading (landscape phones) all keep the static page: the stage
 in the hero and the heading above the cards.
 
+## Card deck
+
+After the mug story releases, the beer cards arrive in their own sticky
+viewport (`.deck-pin`) as a stack. Scrolling fans them out like a hand of cards,
+each lying over the one before it so every name stays readable, then deals them
+into their row showing only icons and names. Further scrolling opens the cards
+one after another, left to right: each grows taller as its description and
+style tag (`.tap-more`) ease in. The pin then releases to the ticker and
+slideshow.
+
+Wide screens deal into one row of five, tablets into three columns, and phones
+into a single column; phones fan the stack downward as a cascade. A single
+column taller than the screen once open glides up as each card opens, ending
+just below the header. The pin holds for 2.2 viewport heights
+(`DECK_VIEWPORTS`). The deck needs no WebGL and runs independently of the 3D
+hero. Reduced motion, a stylesheet without the deck rules, and screens too
+short for the closed cards (landscape phones) keep the usual grid with every
+description showing.
+
 ## Performance and delivery
 
 Glass and chrome are recognised by what they reflect, so the scene has one
@@ -116,6 +136,9 @@ the top, and that reduced motion, model failure, and landscape phones keep the
 static layout. A phone-profile test (iPhone 13, touch and mobile viewport)
 checks the story runs without widening the page: phones grow the layout to fit
 overflowing content, which desktop Chromium hides behind `overflow-x: hidden`.
-A model test checks the mug has its handle and the tap handle keeps its chrome,
+Deck tests (`tests/deck.spec.js`) check the stack, that every name shows in the
+fan, the closed row, the left-to-right opening, the single phone column that
+keeps its last card in view without widening the page, and the reduced-motion
+grid. A model test checks the mug has its handle and the tap handle keeps its chrome,
 brass, and grip parts. Hardware-specific
 performance still needs checking on the deployed page and target devices.
