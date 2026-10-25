@@ -136,8 +136,15 @@ test('the model is a handled beer mug under a chrome tower tap', async ({ reques
   expect(bounds('Tap').max[1]).toBeGreaterThan(bounds('Mug').max[1] + 1);
 });
 
+// The scroll event arrives on the browser's next real frame; wait for it before
+// advancing the controlled clock.
 async function scrollAndSettle(page, top, settle = 1200) {
-  await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), top);
+  await page.evaluate(y => new Promise(resolve => {
+    y = Math.round(y);
+    if (Math.abs(scrollY - y) < 1) { resolve(); return; }
+    addEventListener('scroll', () => resolve(), { once: true });
+    window.scrollTo({ top: y, behavior: 'instant' });
+  }), top);
   await page.clock.runFor(settle);
 }
 
@@ -234,9 +241,10 @@ test.describe('on a phone', () => {
     await expect(stage).toHaveClass(/beer-ready/);
     await expect(page.locator('html')).toHaveClass(/pour-on/);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
-    const end = await page.locator('.taps-grid').evaluate(grid => grid.getBoundingClientRect().top + scrollY);
-    for (const [fraction, step] of [[.45, 'frost'], [.92, 'poured']]) {
-      await page.evaluate(top => window.scrollTo({ top, behavior: 'instant' }), end * fraction);
+    // Positions within the pinned stretch of the 3D story (the card deck follows it).
+    const story = await page.locator('.pour-story').evaluate(s => ({ top: s.getBoundingClientRect().top + scrollY, pinned: s.offsetHeight - document.documentElement.clientHeight }));
+    for (const [fraction, step] of [[.25, 'frost'], [.97, 'poured']]) {
+      await page.evaluate(top => window.scrollTo({ top, behavior: 'instant' }), story.top + story.pinned * fraction);
       await expect(stage).toHaveAttribute('data-pour-step', step);
     }
     await expect(stage).toBeInViewport();

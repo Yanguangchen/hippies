@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { createPourStory } from './pour-story.js';
+import { createCardDeck } from './card-deck.js';
 
 const stage = document.querySelector('.hero-stage');
 const canvas = stage.querySelector('.beer-canvas');
@@ -11,6 +12,11 @@ const BUBBLES = 90;
 const BEER_BOTTOM = .314, BEER_HEIGHT = 1.886, BEER_RADIUS = .66, BEER_TAPER = .009, MUG_HEIGHT = 2.313;
 const SPOUT_X = -.17, SPOUT_TIP = 2.814;
 let renderer;
+
+// The card deck needs no WebGL, so it starts before (and survives) the 3D setup.
+const deck = createCardDeck();
+deck.enabled = !motion.matches;
+motion.addEventListener('change', () => { deck.enabled = !motion.matches; });
 
 try {
   // Smooth silhouettes at native resolution.

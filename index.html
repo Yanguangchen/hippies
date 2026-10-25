@@ -244,7 +244,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="styles.css?v=c198cdd54171">
+<link rel="stylesheet" href="styles.css?v=37b1ead8d39f">
 </head>
 <body>
 
@@ -539,37 +539,52 @@
         </div>
       </div>
     </div>
-    <div class="wrap">
-      <div class="taps-grid">
-        <div class="tap">
-          <div class="icon">🍺</div>
-          <h3>Guinness</h3>
-          <p>The classic dry stout, settled and served the way it should be.</p>
-          <span class="origin">Draught Stout</span>
-        </div>
-        <div class="tap">
-          <div class="icon">🍻</div>
-          <h3>Little Creatures</h3>
-          <p>Australia's much-loved pale ale and a regular's favourite here.</p>
-          <span class="origin">Pale Ale · AUS</span>
-        </div>
-        <div class="tap">
-          <div class="icon">🍺</div>
-          <h3>Goose Island</h3>
-          <p>A bright, hoppy India Pale Ale straight out of Chicago.</p>
-          <span class="origin">IPA · USA</span>
-        </div>
-        <div class="tap">
-          <div class="icon">🍻</div>
-          <h3>Heineken</h3>
-          <p>The world's favourite lager, crisp and refreshing on tap.</p>
-          <span class="origin">Lager · NL</span>
-        </div>
-        <div class="tap">
-          <div class="icon">🍺</div>
-          <h3>Stella Artois</h3>
-          <p>A smooth Belgian pilsner with a clean, slightly bitter finish.</p>
-          <span class="origin">Pilsner · BE</span>
+    <!-- With motion allowed the cards wait as a stack, fan out into their row, then open to show each description -->
+    <div class="deck-story">
+      <div class="deck-pin">
+        <div class="wrap">
+          <div class="taps-grid">
+            <div class="tap">
+              <div class="icon">🍺</div>
+              <h3>Guinness</h3>
+              <div class="tap-more">
+                <p>The classic dry stout, settled and served the way it should be.</p>
+                <span class="origin">Draught Stout</span>
+              </div>
+            </div>
+            <div class="tap">
+              <div class="icon">🍻</div>
+              <h3>Little Creatures</h3>
+              <div class="tap-more">
+                <p>Australia's much-loved pale ale and a regular's favourite here.</p>
+                <span class="origin">Pale Ale · AUS</span>
+              </div>
+            </div>
+            <div class="tap">
+              <div class="icon">🍺</div>
+              <h3>Goose Island</h3>
+              <div class="tap-more">
+                <p>A bright, hoppy India Pale Ale straight out of Chicago.</p>
+                <span class="origin">IPA · USA</span>
+              </div>
+            </div>
+            <div class="tap">
+              <div class="icon">🍻</div>
+              <h3>Heineken</h3>
+              <div class="tap-more">
+                <p>The world's favourite lager, crisp and refreshing on tap.</p>
+                <span class="origin">Lager · NL</span>
+              </div>
+            </div>
+            <div class="tap">
+              <div class="icon">🍺</div>
+              <h3>Stella Artois</h3>
+              <div class="tap-more">
+                <p>A smooth Belgian pilsner with a clean, slightly bitter finish.</p>
+                <span class="origin">Pilsner · BE</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1020,6 +1035,6 @@
     },{once:true});
   })();
 </script>
-<script type="module" src="Assets/js/beer-hero.js?v=3e9a21160381"></script>
+<script type="module" src="Assets/js/beer-hero.js?v=c68a3eeecc80"></script>
 </body>
 </html>
