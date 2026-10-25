@@ -148,11 +148,8 @@ header{
   position:relative;
   width:100%;
   aspect-ratio:4/3;
-  border-radius:20px;
   overflow:hidden;
-  border:1px solid var(--glass-border);
   min-height:470px;
-  background:#211c16;
   transform-origin:center center;
   isolation:isolate;
 }
