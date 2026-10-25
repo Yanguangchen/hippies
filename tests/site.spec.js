@@ -64,6 +64,7 @@ test.describe('Technical SEO and answer-engine files', () => {
     }
     expect(body).toContain('$19.90');
     expect(body).toContain('4:30pm');
+    expect(body).toContain('5-minute walk from Dakota MRT Station');
     expect(body).toContain('The Ribeye Steak');
     expect(body).toContain('Truffle Fries');
     expect(body).toContain('Maggie Goreng');
@@ -119,6 +120,10 @@ test.describe('Technical SEO and answer-engine files', () => {
     const bar = data['@graph'].find((node) => [].concat(node['@type']).includes('BarOrPub'));
     expect(bar.geo.latitude).toBeCloseTo(1.3118773, 5);
     expect(bar.geo.longitude).toBeCloseTo(103.8882446, 5);
+    expect(bar.additionalProperty.name).toBe('Nearest MRT');
+    expect(bar.additionalProperty.value).toBe('Dakota MRT Station');
+    expect(bar.additionalProperty.description).toBe('5-minute walk from Dakota MRT Station.');
+    await expect(page.locator('#visit')).toContainText('5-minute walk from Dakota MRT Station');
     const items = bar.hasMenu.hasMenuSection.flatMap((section) => section.hasMenuItem);
     const ribeye = items.find((item) => item.name === 'The Ribeye Steak');
     expect(ribeye.offers.price).toBe('19.90');
