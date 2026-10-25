@@ -1,181 +1,204 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const stage = document.querySelector('.hero-stage');
 const canvas = stage.querySelector('.beer-canvas');
-const pause = stage.querySelector('[data-beer-pause]');
-const pour = stage.querySelector('[data-beer-pour]');
-const reset = stage.querySelector('[data-beer-reset]');
-const status = stage.querySelector('.beer-status');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
+const LOOP_SECONDS = 12;
 let renderer;
+
 try {
-  renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = .85;
+  // One CSS pixel per rendered pixel: no high-DPI multiplication or HDR passes.
+  renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+  renderer.setPixelRatio(1);
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(34, 1, .1, 30);
-  camera.position.set(0, 1.8, 6.5);
+  const camera = new THREE.PerspectiveCamera(34, 1, .1, 20);
+  camera.position.set(0, 1.2, 8);
   camera.lookAt(0, 0, 0);
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const room = new RoomEnvironment();
-  const environment = pmrem.fromScene(room, .04);
-  scene.environment = environment.texture;
-  room.dispose(); pmrem.dispose();
-  scene.add(new THREE.HemisphereLight(0xfff0cc, 0x65320e, 1));
-  const key = new THREE.DirectionalLight(0xffe9bc, 2);
-  key.position.set(-3, 4, 5); scene.add(key);
-  const rim = new THREE.DirectionalLight(0xb7ddff, 1.5);
-  rim.position.set(3, 2, -2); scene.add(rim);
-  const pivot = new THREE.Group(); scene.add(pivot);
-  let model, liquid, foam, crown, bubbles, stream;
-  let crownY = 0;
-  let paused = motion.matches, visible = true, frame = 0, last = 0, time = 0;
-  let yaw = -.28, pitch = -.08, dragging = false, previousX = 0, previousY = 0;
-  let fill = 1, pouring = false, failed = false;
-  let lastDraw = -Infinity;
-  const seeds = Array.from({ length: 70 }, (_, i) => ({
-    angle: i * 2.39996, radius: .12 + (i % 11) * .044,
-    speed: .22 + (i % 7) * .035, phase: (i * .618) % 1,
+  scene.add(new THREE.HemisphereLight(0xfff3d7, 0x614426, 2));
+  const key = new THREE.DirectionalLight(0xffeed5, 2.5);
+  key.position.set(-3, 5, 4); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xc1e8ff, 1.4);
+  rim.position.set(3, 3, -2); scene.add(rim);
+  // Tiny studio reflection map instead of PMREM generation and physical shaders.
+  const reflection = new THREE.CubeTexture(Array.from({ length: 6 }, (_, i) => {
+    const face = document.createElement('canvas'); face.width = face.height = 32;
+    const ctx = face.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 32, 16);
+    gradient.addColorStop(0, '#342b20'); gradient.addColorStop(.35, '#867b67');
+    gradient.addColorStop(.43, i % 2 ? '#f4f0dd' : '#b6c9d0');
+    gradient.addColorStop(.55, '#655c4d'); gradient.addColorStop(1, '#2b251e');
+    ctx.fillStyle = gradient; ctx.fillRect(0, 0, 32, 32); return face;
   }));
+  reflection.colorSpace = THREE.SRGBColorSpace; reflection.needsUpdate = true;
+  const glassMaterial = new THREE.MeshPhongMaterial({ color: 0xb9d8e3, specular: 0xffffff, shininess: 90, transparent: true, opacity: .19, depthWrite: false, envMap: reflection, reflectivity: .35 });
+  const beerMaterial = new THREE.MeshPhongMaterial({ color: 0xd1840c, specular: 0xffd67c, shininess: 65 });
+  const foamMaterial = new THREE.MeshLambertMaterial({ color: 0xffefd0 });
+  const chromeMaterial = new THREE.MeshPhongMaterial({ color: 0x9d9179, specular: 0xffffff, shininess: 100, envMap: reflection, reflectivity: .65 });
+  const iceMaterial = new THREE.MeshPhongMaterial({ color: 0xb5e8ff, specular: 0xffffff, shininess: 100, envMap: reflection, reflectivity: .35, transparent: true, opacity: .8 });
+  const pivot = new THREE.Group(); pivot.position.y = -1.85; scene.add(pivot);
+  const pint = new THREE.Group(); pivot.add(pint);
+  let model, liquid, foam, crown, bubbles, stream, handle, ice;
+  let crownBase, foamBase, liquidBase, previousFill = -1;
+  let visible = false, failed = false, raf = 0, timer = 0, last = 0, elapsed = 0;
+  let yaw = -.12, pitch = 0, dragging = false, previousX = 0, previousY = 0;
+  let slowFrames = 0, pixelRatio = 1;
   const dummy = new THREE.Object3D();
-  function updateButtons() {
-    pause.textContent = paused ? 'Play' : 'Pause';
-    pause.setAttribute('aria-pressed', String(paused));
-    pour.disabled = pouring;
+  const iceX = [.22, -.25, .05], iceZ = [.30, .35, -.16];
+  const clamp = THREE.MathUtils.clamp;
+  const ease = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+
+  function pose() {
+    const t = motion.matches ? 8.5 : elapsed % LOOP_SECONDS;
+    const fill = .06 + .94 * ease((t - .65) / 4.1);
+    const pouring = t >= .65 && t < 4.75;
+    const phase = t < .65 ? 'ready' : pouring ? 'pouring' : t < 7 ? 'ice' : t < 10 ? 'hold' : 'reset';
+    stage.dataset.beerPhase = phase;
+    stage.dataset.beerCycle = String(Math.floor(elapsed / LOOP_SECONDS));
+    // The full pint leaves below the frame; an empty one returns before the tap opens.
+    pint.position.y = t >= 10 ? -4.5 * ease((t - 10) / 1.1) : -4.5 * (1 - ease(t / .6));
+    if (motion.matches) pint.position.y = 0;
+    pint.visible = t < 11.15 || motion.matches;
+    pivot.rotation.set(pitch, yaw, 0);
+    const surface = .19 + 2.03 * fill;
+    // Keep the liquid inside the taper at every fill height, not just when full.
+    if (fill !== previousFill) {
+      const positions = liquid.geometry.attributes.position;
+      for (let i = 0; i < positions.count; i++) {
+        const y = liquidBase[i * 3 + 1];
+        const level = clamp((y - .19) / 2.03, 0, 1);
+        const radiusScale = (.53 + .194 * level * fill) / (.53 + .194 * level);
+        positions.setXYZ(i, liquidBase[i * 3] * radiusScale, .19 + (y - .19) * fill, liquidBase[i * 3 + 2] * radiusScale);
+      }
+      positions.needsUpdate = true; previousFill = fill;
+    }
+    // Narrow the foam as it descends into the tapered glass.
+    const foamRadius = (.53 + .194 * fill) / .724;
+    foam.scale.set(foamRadius, 1, foamRadius);
+    foam.position.y = foamBase - 2.03 * (1 - fill);
+    crown.scale.x = crown.scale.z = foamRadius;
+    crown.position.y = crownBase - 2.03 * (1 - fill);
+    foam.visible = crown.visible = fill > .1;
+    stream.visible = pouring;
+    stream.position.set(-.24, (3.06 + surface) / 2, 0);
+    stream.scale.set(1 + Math.sin(t * 24) * .08, 3.06 - surface, 1);
+    handle.rotation.x = -.5 * (ease((t - .25) / .4) - ease((t - 4.65) / .35));
+    ice.forEach((cube, i) => {
+      const age = t - (4.85 + i * .58);
+      cube.visible = age >= 0 && t < 11.15;
+      const drop = clamp(age / .65, 0, 1);
+      const landing = 2.32;
+      const bob = age > .65 ? Math.sin((age - .65) * 10) * .10 * Math.exp(-(age - .65) * 1.7) : 0;
+      cube.position.set(iceX[i], 3.85 - (3.85 - landing) * drop * drop + bob, iceZ[i]);
+      cube.rotation.set(.35 + drop * .8 + i, .4 + drop * .7, .2 + i * .7);
+    });
+    bubbles.visible = fill > .15;
+    for (let i = 0; i < 24; i++) {
+      const height = .22 + ((i * .618 + elapsed * (.15 + i % 3 * .04)) % 1) * 1.85 * fill;
+      const x = Math.sin(i * 2.4) * .40;
+      const radius = .53 + .194 * (height - .19) / (2.03 * fill);
+      dummy.position.set(x, height, Math.sqrt(Math.max(0, radius * radius - x * x)) + .004);
+      dummy.scale.setScalar(.012 + i % 3 * .004); dummy.updateMatrix(); bubbles.setMatrixAt(i, dummy.matrix);
+    }
+    bubbles.instanceMatrix.needsUpdate = true;
   }
-  function render(now = 0) {
-    frame = 0;
-    if (failed || !model || !visible || document.hidden) return;
-    // Cap ambient rendering at 30 fps, while direct interaction stays responsive.
-    if (!paused && !dragging && now - lastDraw < 1000 / 30) {
-      frame = requestAnimationFrame(render);
-      return;
-    }
-    lastDraw = now;
-    const dt = Math.max(0, (now - last) / 1000 || 0); last = now;
-    if (!paused) time += dt;
-    if (pouring && !paused) {
-      fill = Math.min(1, fill + dt * .3);
-      if (fill === 1) { pouring = false; status.textContent = 'Freshly poured. Cheers.'; updateButtons(); }
-    }
-    if (model) {
-      pivot.rotation.set(pitch, yaw + (!paused && !dragging ? Math.sin(time * .35) * .12 : 0), -.09);
-      pivot.position.y = paused ? 0 : Math.sin(time * .9) * .035;
-      liquid.scale.y = fill;
-      foam.position.y = -2.2 * (1 - fill);
-      crown.position.y = crownY - 2.2 * (1 - fill);
-      stream.visible = pouring;
-      stream.scale.y = Math.max(.01, 3.4 - 2.2 * fill);
-      stream.position.y = (3.4 + 2.2 * fill) / 2;
-      bubbles.visible = fill > .15;
-      seeds.forEach((s, i) => {
-        const height = ((s.phase + time * s.speed) % 1) * 1.85 * fill + .23;
-        const x = Math.cos(s.angle) * s.radius;
-        const radius = .53 + .194 * (height - .19) / 2.03;
-        dummy.position.set(x, height, Math.sqrt(Math.max(0, radius * radius - x * x)) + .006);
-        dummy.scale.setScalar(.012 + (i % 4) * .003); dummy.updateMatrix();
-        bubbles.setMatrixAt(i, dummy.matrix);
-      });
-      bubbles.instanceMatrix.needsUpdate = true;
-    }
-    renderer.render(scene, camera);
-    if (visible && !document.hidden && !paused) frame = requestAnimationFrame(render);
+
+  function stop() { cancelAnimationFrame(raf); clearTimeout(timer); raf = timer = 0; last = 0; }
+  function requestDraw() {
+    if (!model || failed || !visible || document.hidden || raf) return;
+    clearTimeout(timer); timer = 0;
+    raf = requestAnimationFrame(draw);
   }
-  function invalidate() {
-    if (!frame && model && !failed && visible && !document.hidden) { last = performance.now(); frame = requestAnimationFrame(render); }
+  function draw(now) {
+    raf = 0;
+    if (!model || failed || !visible || document.hidden) return;
+    if (!motion.matches && last) elapsed += (now - last) / 1000;
+    last = now;
+    const start = performance.now();
+    pose(); renderer.render(scene, camera);
+    const cost = performance.now() - start;
+    // Back off resolution on slow GPUs, rather than queueing more work.
+    slowFrames = cost > 24 ? slowFrames + 1 : Math.max(0, slowFrames - 1);
+    if (slowFrames >= 12 && pixelRatio > .7) {
+      pixelRatio = Math.max(.7, pixelRatio - .15); renderer.setPixelRatio(pixelRatio);
+      slowFrames = 0;
+    }
+    if (!motion.matches) timer = setTimeout(requestDraw, Math.max(0, 1000 / 30 - cost));
   }
   function fitCanvas() {
-    // Measure the container, never the drawing buffer: stale/missing CSS must
-    // not make DPR multiply the canvas dimensions on every observer callback.
-    const width = stage.clientWidth;
-    const height = Math.max(1, stage.clientHeight - 60);
+    const width = stage.clientWidth, height = Math.max(1, stage.clientHeight - 52);
     if (!width) return;
     renderer.setSize(width, height);
     camera.aspect = width / height;
-    camera.position.z = camera.aspect < 1 ? 7.3 : 6.5;
-    camera.updateProjectionMatrix();
-    invalidate();
+    camera.position.z = camera.aspect < .8 ? 8.7 : 8;
+    camera.updateProjectionMatrix(); requestDraw();
   }
-  const resize = new ResizeObserver(fitCanvas);
-  resize.observe(stage);
-  fitCanvas();
-  new IntersectionObserver(([entry]) => {
+  const resize = new ResizeObserver(fitCanvas); resize.observe(stage); fitCanvas();
+  const intersection = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
-    if (!visible) { cancelAnimationFrame(frame); frame = 0; } else invalidate();
-  }).observe(stage);
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { cancelAnimationFrame(frame); frame = 0; } else invalidate();
+    if (!visible) stop(); else requestDraw();
   });
+  intersection.observe(stage);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else requestDraw(); });
+  motion.addEventListener('change', () => { stop(); requestDraw(); });
   canvas.addEventListener('pointerdown', e => {
-    dragging = true; previousX = e.clientX; previousY = e.clientY;
-    canvas.setPointerCapture(e.pointerId);
+    dragging = true; previousX = e.clientX; previousY = e.clientY; canvas.setPointerCapture(e.pointerId);
   });
   canvas.addEventListener('pointermove', e => {
     if (!dragging) return;
-    yaw += (e.clientX - previousX) * .009;
-    pitch = THREE.MathUtils.clamp(pitch + (e.clientY - previousY) * .005, -.45, .45);
-    previousX = e.clientX; previousY = e.clientY; invalidate();
+    yaw = clamp(yaw + (e.clientX - previousX) * .006, -.65, .65);
+    pitch = clamp(pitch + (e.clientY - previousY) * .003, -.15, .15);
+    previousX = e.clientX; previousY = e.clientY; requestDraw();
   });
-  const release = () => { dragging = false; };
-  canvas.addEventListener('pointerup', release); canvas.addEventListener('pointercancel', release);
-  canvas.addEventListener('lostpointercapture', release);
+  for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.addEventListener(event, () => { dragging = false; });
   canvas.addEventListener('keydown', e => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home'].includes(e.key)) return;
     e.preventDefault();
-    if (e.key === 'Home') { yaw = -.28; pitch = -.08; }
-    else if (e.key === 'ArrowLeft') yaw -= .15;
-    else if (e.key === 'ArrowRight') yaw += .15;
-    else pitch = THREE.MathUtils.clamp(pitch + (e.key === 'ArrowUp' ? -.1 : .1), -.45, .45);
-    invalidate();
+    if (e.key === 'Home') { yaw = -.12; pitch = 0; }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') yaw = clamp(yaw + (e.key === 'ArrowLeft' ? -.15 : .15), -.65, .65);
+    else pitch = clamp(pitch + (e.key === 'ArrowUp' ? -.08 : .08), -.15, .15);
+    requestDraw();
   });
-  pause.addEventListener('click', () => { paused = !paused; updateButtons(); invalidate(); });
-  reset.addEventListener('click', () => { yaw = -.28; pitch = -.08; invalidate(); });
-  pour.addEventListener('click', () => {
-    fill = motion.matches ? 1 : .07; pouring = !motion.matches;
-    if (pouring) paused = false;
-    status.textContent = pouring ? 'Pouring a fresh pint…' : 'Freshly poured. Cheers.';
-    updateButtons(); invalidate();
-  });
-  motion.addEventListener('change', () => {
-    paused = motion.matches; fill = 1; pouring = false; updateButtons(); invalidate();
-  });
-  canvas.addEventListener('webglcontextlost', e => {
-    e.preventDefault(); cancelAnimationFrame(frame); frame = 0;
-    failed = true; paused = true; visible = false; canvas.tabIndex = -1;
-    stage.classList.remove('beer-ready'); status.textContent = 'Cold beer. Good company.';
-  });
-  new GLTFLoader().load('/Assets/models/beer.glb', gltf => {
-    model = gltf.scene; model.position.y = -1.2; pivot.add(model);
-    liquid = model.getObjectByName('Liquid'); foam = model.getObjectByName('Head'); crown = model.getObjectByName('FoamCrown');
-    crownY = crown.position.y;
+  function fallback() {
+    failed = true; stop(); resize.disconnect(); intersection.disconnect();
+    canvas.tabIndex = -1; stage.classList.remove('beer-ready'); renderer.dispose();
+  }
+  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); fallback(); });
+  new GLTFLoader().load(__BEER_MODEL_URL__, gltf => {
+    model = gltf.scene;
     model.traverse(o => {
       if (!o.isMesh) return;
-      if (o.name === 'Glass' || o.name === 'Condensation') {
-        o.material = new THREE.MeshPhysicalMaterial({ color: 0xe2f5ff, roughness: .07, metalness: 0, transmission: 0, transparent: true, opacity: .22, depthWrite: false, thickness: .12, ior: 1.45, envMapIntensity: .8 });
-      }
-      if (o.name === 'Liquid') o.material = new THREE.MeshPhysicalMaterial({ color: 0xc16a06, roughness: .22, metalness: .12, clearcoat: 1 });
+      if (['Glass', 'Condensation'].includes(o.name)) o.material = glassMaterial;
+      else if (o.name === 'Liquid') o.material = beerMaterial;
+      else if (['Head', 'FoamCrown'].includes(o.name)) o.material = foamMaterial;
+      else if (o.name === 'Tap') o.material = chromeMaterial;
+      else if (o.name === 'Ice') o.material = iceMaterial;
+      else o.material = new THREE.MeshPhongMaterial({ color: 0x48240c, shininess: 45 });
     });
-    bubbles = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 8, 6), new THREE.MeshStandardMaterial({ color: 0xffe8a0, roughness: .25, metalness: .3 }), seeds.length);
-    model.add(bubbles);
-    stream = new THREE.Mesh(new THREE.CylinderGeometry(.035, .055, 1, 12), liquid.material);
-    model.add(stream);
-    // Curved lettering sits just outside the glass, like a printed pub glass.
-    const label = document.createElement('canvas'); label.width = 1024; label.height = 512;
-    const ctx = label.getContext('2d');
-    ctx.textAlign = 'center'; ctx.fillStyle = '#fff4d4';
-    ctx.font = 'bold 92px Georgia'; ctx.fillText('HIPPIES', 512, 220);
-    ctx.font = '24px sans-serif'; ctx.fillText('B A R   &   G R I L L', 512, 280);
-    ctx.fillRect(340, 320, 344, 3); ctx.font = '22px sans-serif'; ctx.fillText('GOOD TIMES ON TAP', 512, 366);
+    // Separate the stationary tap from the pint that leaves at the end of a loop.
+    for (const child of [...model.children]) {
+      if (['Tap', 'TapHandle'].includes(child.name)) pivot.add(child);
+      else if (child.name !== 'Ice') pint.add(child);
+    }
+    liquid = pint.getObjectByName('Liquid'); foam = pint.getObjectByName('Head'); crown = pint.getObjectByName('FoamCrown');
+    liquidBase = liquid.geometry.attributes.position.array.slice();
+    foamBase = foam.position.y; crownBase = crown.position.y;
+    handle = pivot.getObjectByName('TapHandle');
+    const iceTemplate = model.getObjectByName('Ice');
+    ice = Array.from({ length: 3 }, () => { const cube = iceTemplate.clone(); pint.add(cube); return cube; });
+    bubbles = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 6, 4), new THREE.MeshBasicMaterial({ color: 0xffe9b2 }), 24);
+    pint.add(bubbles);
+    stream = new THREE.Mesh(new THREE.CylinderGeometry(.038, .05, 1, 8), beerMaterial); pivot.add(stream);
+    const label = document.createElement('canvas'); label.width = 512; label.height = 256;
+    const ctx = label.getContext('2d'); ctx.textAlign = 'center'; ctx.fillStyle = '#fff4d4';
+    ctx.font = 'bold 60px Georgia'; ctx.fillText('HIPPIES', 256, 110);
+    ctx.font = '14px sans-serif'; ctx.fillText('B A R   &   G R I L L', 256, 148);
+    ctx.fillRect(160, 170, 192, 1);
     const texture = new THREE.CanvasTexture(label); texture.colorSpace = THREE.SRGBColorSpace;
-    const print = new THREE.Mesh(new THREE.CylinderGeometry(.745, .685, .7, 48, 1, true, -.9, 1.8), new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
-    print.position.y = 1.25; model.add(print);
-    canvas.tabIndex = 0; stage.classList.add('beer-ready'); status.textContent = 'Drag to spin · make yourself at home';
-    updateButtons(); invalidate();
-  }, undefined, () => { failed = true; paused = true; visible = false; cancelAnimationFrame(frame); frame = 0; status.textContent = 'Cold beer. Good company.'; renderer.dispose(); resize.disconnect(); });
+    const print = new THREE.Mesh(new THREE.CylinderGeometry(.745, .685, .7, 24, 1, true, -.9, 1.8), new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false }));
+    print.position.y = 1.25; pint.add(print);
+    canvas.tabIndex = 0; stage.classList.add('beer-ready'); requestDraw();
+  }, undefined, fallback);
 } catch {
-  status.textContent = 'Cold beer. Good company.';
   renderer?.dispose();
 }
