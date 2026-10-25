@@ -96,9 +96,10 @@ test.describe('cached styles and high-DPI sizing', () => {
     await expect(canvas).toHaveCSS('opacity', '1');
     const sizes = await canvas.evaluate(c => ({ buffer: c.width, width: c.getBoundingClientRect().width, container: c.parentElement.clientWidth }));
     expect(sizes.width).toBe(sizes.container);
-    expect(sizes.buffer).toBeLessThanOrEqual(sizes.container * .85);
-    expect(sizes.buffer).toBeLessThanOrEqual(420);
-    expect(await canvas.evaluate(c => c.getContext('webgl2').getContextAttributes().antialias)).toBeFalsy();
+    expect(sizes.buffer).toBeGreaterThanOrEqual(sizes.container);
+    expect(sizes.buffer).toBeLessThanOrEqual(sizes.container * 1.25);
+    expect(sizes.buffer).toBeLessThanOrEqual(1024);
+    expect(await canvas.evaluate(c => c.getContext('webgl2').getContextAttributes().antialias)).toBeTruthy();
     const centerOwnsCanvas = await canvas.evaluate(c => {
       const r = c.getBoundingClientRect();
       return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === c;

@@ -41,12 +41,14 @@ is retained. Reduced motion renders one still, full pint with ice.
 All surfaces use unlit MeshBasicMaterial. A directional tint is baked into vertex
 colors once at load time to keep the shape readable; there are no runtime lights,
 reflection maps, specular highlights, refraction, shadows, or postprocessing.
-Ice is opaque. Only the glass shell and printed label need alpha blending.
+Beer, foam, tap, handle, and ice are opaque. Only the glass shell uses alpha
+blending; the printed label uses an opaque alpha-test cutout.
 Condensation, rising bubbles, foam-crown detail, headline particles, and animated
 headline glows have been removed.
 
-Antialiasing is disabled. The drawing buffer is limited to 0.85 pixels per CSS
-pixel and a maximum dimension of 420 pixels regardless of display DPR. Animation
+Antialiasing smooths the silhouettes. The drawing buffer follows device pixel
+ratio up to 1.25, with a maximum dimension of 1024 pixels. This avoids the previous
+below-native resolution while keeping a modest pixel budget. Animation
 targets 24 fps and sleeps during the three-second full-pint hold and the empty
 beat. Rendering also stops offscreen, in hidden tabs, and under reduced motion
 (except explicit view changes). The 12-second pour-and-ice sequence is retained.
@@ -58,6 +60,6 @@ The SVG illustration remains a static fallback for WebGL or model-load failure.
 
 Browser tests cover a complete repeat cycle using a controlled clock, no control
 buttons, reduced motion, keyboard view changes, actual WebGL draw-call suspension
-during holds and offscreen, the render resolution budget, disabled antialiasing,
+during holds and offscreen, the render resolution budget, enabled antialiasing,
 model failure, versioned styles, and high-DPI sizing. Hardware-specific
 performance still needs checking on the deployed page and target devices.
