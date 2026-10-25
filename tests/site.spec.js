@@ -64,8 +64,15 @@ test.describe('Technical SEO and answer-engine files', () => {
     }
     expect(body).toContain('$19.90');
     expect(body).toContain('4:30pm');
+    expect(body).toContain('5-minute walk from Dakota MRT Station');
+    expect(body).toContain('The Ribeye Steak');
+    expect(body).toContain('Truffle Fries');
+    expect(body).toContain('Maggie Goreng');
+    expect(body).toContain('Espresso Martini');
+    expect(body).toContain('Glenfiddich 12');
     expect(body).not.toContain('Loaded Nachos');
     expect(body).not.toContain('Shrimp Skewers');
+    expect(body).not.toContain('Beef Chilli');
   });
 
   test('sitemap lists every canonical URL', async ({ request }) => {
@@ -113,11 +120,31 @@ test.describe('Technical SEO and answer-engine files', () => {
     const bar = data['@graph'].find((node) => [].concat(node['@type']).includes('BarOrPub'));
     expect(bar.geo.latitude).toBeCloseTo(1.3118773, 5);
     expect(bar.geo.longitude).toBeCloseTo(103.8882446, 5);
+    expect(bar.additionalProperty.name).toBe('Nearest MRT');
+    expect(bar.additionalProperty.value).toBe('Dakota MRT Station');
+    expect(bar.additionalProperty.description).toBe('5-minute walk from Dakota MRT Station.');
+    await expect(page.locator('#visit')).toContainText('5-minute walk from Dakota MRT Station');
     const items = bar.hasMenu.hasMenuSection.flatMap((section) => section.hasMenuItem);
-    const ribeye = items.find((item) => item.name === 'Ribeye Steak');
+    const ribeye = items.find((item) => item.name === 'The Ribeye Steak');
     expect(ribeye.offers.price).toBe('19.90');
-    expect(items.some((item) => item.name === 'Hippies Bites Platter')).toBeTruthy();
-    expect(items.some((item) => item.name === 'Goose Island IPA')).toBeTruthy();
+    expect(ribeye.alternateName).toBe('Ribeye Steak');
+    expect(items.some((item) => item.name === "Hippies' Bites Platter")).toBeTruthy();
+    expect(items.some((item) => item.name === 'Goose Island' && item.alternateName === 'Goose Island IPA')).toBeTruthy();
+    expect(items.some((item) => item.name === 'Truffle Fries')).toBeTruthy();
+    expect(items.some((item) => item.name === 'Tiger')).toBeTruthy();
+    expect(items.some((item) => item.name === 'Maggie Goreng')).toBeTruthy();
+    expect(items.some((item) => item.name === 'Espresso Martini')).toBeTruthy();
+    expect(items.some((item) => /Beef Chilli/i.test(item.name))).toBeFalsy();
+    expect(items).toHaveLength(152);
+    const visible = await page.locator('#menu .menu-row .item').evaluateAll((nodes) => nodes.map((node) => {
+      const clone = node.cloneNode(true);
+      clone.querySelector('small')?.remove();
+      return clone.textContent.replace(/\s+/g, ' ').trim();
+    }));
+    for (const name of visible) {
+      const known = name === 'Ribeye Steak' ? 'The Ribeye Steak' : name === 'Hippies Bites Platter' ? "Hippies' Bites Platter" : name;
+      expect(items.some((item) => item.name === known), known).toBeTruthy();
+    }
     await expect(page.locator('#guides a')).toHaveCount(4);
     await expect(page.locator('.stat .num').last()).toHaveText('5');
   });

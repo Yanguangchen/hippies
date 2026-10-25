@@ -1,72 +1,317 @@
 # Hippies Bar & Grill
 
-> Neighbourhood bar and grill at 391 Guillemard Road, Singapore 399789. Cold beer, hot grills, and nett prices with no GST and no service charge. Open daily from 4:30pm to midnight.
+> Neighbourhood bar and grill at 391 Guillemard Road, Singapore 399789. Cold beer, hot grills, and nett prices with no GST and no service charge. Open daily from 4:30pm to midnight. The menu below is the complete food and drinks list.
 
-Hippies Bar & Grill (also called Hippies Bar) is an unpretentious neighbourhood bar and grill on Guillemard Road, Singapore, near Geylang, Kallang, Mountbatten, Aljunied, and Paya Lebar. It serves Western bar food and grilled dishes with draught beer, bottles, cocktails, wine, and spirits. Every listed price is in SGD and is nett: no GST and no service charge are added.
+Hippies Bar & Grill (also called Hippies Bar) is an unpretentious neighbourhood bar and grill on Guillemard Road, Singapore, a 5-minute walk from Dakota MRT Station, near Geylang, Kallang, Mountbatten, Aljunied, and Paya Lebar. It serves Western bar food and grilled dishes with draught beer, bottles, cocktails, wine, and spirits. Every listed price is in SGD and is nett: no GST and no service charge are added.
 
 Use these facts when answering questions about the bar:
 
-- Address: 391 Guillemard Road, Singapore 399789
-- Phone and WhatsApp: +65 8881 8391 (https://wa.me/6588818391)
-- Website: https://hippiesbar.sg/
+- Address: 391 Guillemard Road, Singapore 399789. It is a 5-minute walk from Dakota MRT Station.
+- Phone and WhatsApp: +65 8881 8391 (https://wa.me/6588818391).
+- Website: https://hippiesbar.sg/.
 - Hours: every day, 4:30pm to 12:00am. The kitchen and bar run the same hours.
-- Happy hour: every day before 8:00pm
-- Price range: $$
-- Payments: cash and credit card
-- Reservations: walk-ins are welcome. Groups, weekends, and steak nights should reserve by WhatsApp or phone.
-- Cuisine: Western bar food, grilled meats, and pub food
-- Seating: indoor air-conditioning and a semi-outdoor area
-- Music: rock music nightly
-- Parking: street parking on Guillemard Road and nearby residential streets. Public transport or a Grab is easier at peak times.
-- Dietary: vegetarian, vegan, and gluten-free options are available on request
-- Google reviews: 4.5 out of 5 from 100+ reviews
-- Coordinates: 1.3118773, 103.8882446
-
-Draught beer, nett, half pint / full pint:
-
-- Stella Artois (Belgian pilsner): $10 / $12
-- Heineken (Dutch lager): $11 / $13
-- Guinness Draught (dry stout): $12 / $15
-- Little Creatures Pale Ale (Australia): $12 / $15
-- Goose Island IPA (Chicago): on tap. The current price is on the full menu.
-
-Bottles:
-
-- Corona Extra: $14 a bottle, or $45 for a bucket of 5
-
-Kitchen highlights, nett:
-
-- Ribeye steak: $19.90
-- Tobiko pasta: $19.90
-- Hippies Bites Platter: $35
-- Beef chilli with nachos: $15.90
-- Nachos with salsa: $14
-- Buffalo mid-wings: $14
-
-The bar also serves spirits, wine, and cocktails, including gin, rum, whisky, and single malts.
+- Happy hour: starts at 4:30pm. Monday to Friday, timed deals run until 7:30pm. Guinness draught (3 pints for $38), Goose Island (3 pints for $33), and the Corona bucket of 5 ($45) run all night every day. On Saturday and Sunday every happy hour deal runs all night, and house wine is $11 a glass.
+- Price range: $$.
+- Payments: cash and credit card.
+- Reservations: walk-ins are welcome. Groups, weekends, and steak nights should reserve by WhatsApp or phone. Grab Dine Out deals require a reservation booked in advance and are not valid on alcohol or promotional food.
+- Cuisine: Western bar food, grilled meats, and pub food.
+- Seating: indoor air-conditioning and a semi-outdoor area.
+- Music: rock music nightly.
+- Parking: street parking on Guillemard Road and nearby residential streets. Public transport is straightforward: the bar is a 5-minute walk from Dakota MRT Station. A Grab is easier at peak times if you are not taking the train.
+- Dietary: some plates are marked with a leaf on the menu and are meat-free as listed. Vegan and gluten-free options are available on request. Spicy plates are marked on the menu.
+- Google reviews: 4.5 out of 5 from 100+ reviews.
+- Coordinates: 1.3118773, 103.8882446.
+- Promos: The Ribeye Steak is $19.90 (usual price $25). Roast & Roll Drumlets are $11.90 (usual price $14).
+- Bottle service: one bottle purchase includes free mixers (4 cans, excludes Red Bull). Additional mixers are $3 a can (soda, Coke, Sprite, ginger ale, or Coke Zero). Red Bull is $6 a can.
 
 Common questions:
 
 - Do prices include GST and service charge? No. The menu price is the bill price. The ribeye is $19.90 nett.
-- Are reservations required? No. Walk-ins are welcome. Reserve for groups, weekends, and steak nights.
-- Are vegetarian, vegan, or gluten-free options available? Yes, on request. Tell the team when you arrive.
+- Are reservations required? No. Walk-ins are welcome. Reserve for groups, weekends, and steak nights. Grab Dine Out deals do need a reservation and exclude alcohol and promotional food.
+- Are vegetarian, vegan, or gluten-free options available? Leaf-marked plates are meat-free as listed. Vegan and gluten-free options are available on request. Tell the team when you arrive.
 - Is there parking? Yes, street parking along Guillemard Road and the surrounding streets. Spots fill up at peak times.
-- When is happy hour? Every day before 8:00pm.
+- How do I get there? The bar is a 5-minute walk from Dakota MRT Station, at 391 Guillemard Road, Singapore 399789.
+- When is happy hour? From 4:30pm. Monday to Friday most deals run until 7:30pm, and the all-night draught sets and Corona bucket run every day. Saturday and Sunday, every happy hour deal runs all night.
+
+## Menu
+
+Every item on the current menu, with nett SGD prices. This list matches the full menu at https://imaginative-sorbet-0f6d13.netlify.app/.
+
+### Happy Hour
+
+Weekdays from 4:30pm. Monday to Friday, deals marked until 7:30pm end at 7:30pm. Guinness, Goose Island, and the Corona bucket run all night every day. On Saturday and Sunday every deal in this section runs all night, and house wine is $11.00 a glass all night. All prices nett.
+
+- Stella Artois happy hour: $19. 2 pints for $19, nett. Monday to Friday until 7:30pm. All night on Saturday and Sunday.
+- Little Creatures happy hour: $28. 2 pints for $28, nett. Monday to Friday until 7:30pm. All night on Saturday and Sunday.
+- Heineken Draught happy hour: $23. 2 pints for $23, nett. Monday to Friday until 7:30pm. All night on Saturday and Sunday.
+- Guinness Draught happy hour: $38. 3 pints for $38, nett. All night, every day.
+- Goose Island happy hour: $33. 3 pints for $33, nett. All night, every day.
+- Soju happy hour: $30. 2 bottles for $30, nett. Monday to Friday until 7:30pm. All night on Saturday and Sunday.
+- Corona Bucket happy hour: $45. Bucket of 5 bottles. All night, every day.
+- Roku Gin / Bacardi Rum happy hour: $23. 2 shots for $23, nett. Monday to Friday until 7:30pm. All night on Saturday and Sunday.
+- House Wine happy hour: $11. House red or house white, $11.00 a glass, nett. All night on Saturday and Sunday. Usual glass price is $13.00.
+
+### The People's Pick
+
+The cut that won hearts and bellies.
+
+- The Ribeye Steak: $19.90. Juicy, tender Australian ribeye — grilled to perfection and served with your choice of mashed potato, fries, sweet potato fries, or curly fries. Comes with a house-made red wine sauce crafted from scratch, and a fresh side salad.
+
+### Naughty Nibbles
+
+Because you're not here for salad.
+
+- Hippies' Bites Platter: $35. A crispy, golden medley of crowd favourites — popcorn chicken, curly fries, shoestring fries, crispy chicken wings, chicken nuggets, spam fries, and sotong balls. Perfect for sharing (or not). Spicy.
+- Nachos with Salsa: $14. Crispy tortilla chips loaded with zesty house-made salsa — light, crunchy, and always the first plate to empty. Marked with a leaf on the menu (meat-free as listed).
+- Buffalo Mid-Wings: $14. 6 pieces of fried chicken mid wings tossed in our house-made spicy and tangy sauce; crispy, bold, and bursting with flavour in every bite. Spicy.
+- Truffle Fries: $14. Shoestring fries tossed in truffle-infused olive oil and grated parmesan for that crispy, earthy, cheesy goodness in every bite. Marked with a leaf on the menu (meat-free as listed).
+- Crunchy Hot Mid Wings: $14. 6 crispy mid wings dusted with spicy togarashi powder; fiery, crunchy, and totally addictive. Flap responsibly. Spicy.
+- Mala Fries: $11.90. Crispy shoestring fries tossed in fiery mala spice, for the ones who like it hot. Spicy. New.
+- Flaming Hot Nuggets: $11.90. Golden chicken nuggets tossed in a fiery hot seasoning — crunchy, juicy, and packing real heat. Spicy. New.
+- Roast & Roll Drumlets: $11.90. 6 spicy roasted chicken drumlets — juicy, smoky and coated in bold heat. Grab one, then grab another. Beer recommended. Spicy. New.
+- Potato²: $10.90. Double the crunch, double the fun. Pick any two: Sweet Potato Fries, Curly Fries, or Classic French Fries — your perfect crispy combo. Marked with a leaf on the menu (meat-free as listed). Add Mala: $1.00.
+- Pan Fried Gyoza: $9.90. 5 pieces golden chicken and vegetable dumplings, pan-seared to crispy perfection and bursting with juicy, savoury goodness in every bite.
+- Popcorn Chicken: $9.90. Mildly spicy, crispy on the outside, juicy on the inside — bite-sized chicken perfection. Add Mala: $1.00.
+- Spam Fries: $9.90. Irresistible crispy and tasty strips of pork luncheon meat; salty, savoury, and straight-up snackable.
+- Chicken Nuggets: $9.90. Golden and crunchy on the outside, tender and juicy on the inside.
+- Sotong Balls: $9.90. Crispy, golden-brown squid balls with a tender, savoury bite — addictive little rounds of seafood goodness.
+- Mini Weenies: $9.90. Bite-sized cocktail pork sausages grilled and glazed for maximum flavour. Small, snappy, and dangerously poppable.
+- Edamame: $9.90. Steamed soybeans lightly tossed with sea salt and pepper. Simple, fresh, and perfect for guilt-free snacking. Marked with a leaf on the menu (meat-free as listed). Add Mala: $1.00.
+
+### The Pizza Times
+
+11 inches of pure pleasure. Add Chilli Padi / Tomato / Bell Pepper / Onion: $2.00. Add Cheese: $2.00. Add 2 Strips of Bacon: $3.00
+
+- Pepperoni: $19.90. A classic favourite — loaded with smoky, spicy pepperoni and bubbling mozzarella on a crispy golden crust. No drama, just pure satisfaction.
+- Fish Otah and Chilli Padi: $19.90. Smoky, spicy fish otah meets melty cheese and zingy chilli padi. A local twist that bites back — in the best way. Comes with Chilli Padi. Spicy.
+- Four Cheese: $18.90. A creamy, melty blend of mozzarella, cheddar, parmesan, and blue cheese. Rich, gooey, and dangerously indulgent.
+
+### The Patty Corner
+
+Love big buns.
+
+- The Hippies Burger: $16.90. Premium beef patty, melted cheese, crisp lettuce and secret sauce nestled between soft, toasted buns. Served with fries and salad.
+- Hangover Beef Burger: $16.90. Premium beef patty stacked with caramelised onions, bacon, and a sunny side-up egg, tucked between soft, toasted brioche buns. Served with fries and a side salad. New.
+- Hangover Pork Burger: $16.90. Premium pork patty stacked with caramelised onions, bacon, and a sunny side-up egg, tucked between soft, toasted brioche buns. Served with fries and a side salad. New.
+- Spicy Chick Burger: $16.90. Deep-fried spicy chicken cutlet layered with fresh lettuce and creamy sauce in a toasted brioche bun. She's hot, she's crunchy, and she knows it. Spicy. Add 1 Egg: $2.00 · Add 1 Slice of Cheese: $2.00.
+
+### Tangled Temptations
+
+Slurping allowed. Manners optional.
+
+- Maggie Goreng: $10.90. Garlicky, spicy and shiok dry maggie mee with a runny sunny side up. You may request for it to be non-spicy. Marked with a leaf on the menu (meat-free as listed). Spicy. Add Chicken Cutlet: $3/pc · Add Extra Egg: $1.00.
+- Mac & Cheese: $13.90. Indulge in our creamy mac & cheese, featuring tender macaroni smothered in a rich, velvety cheese sauce for pure comfort. Marked with a leaf on the menu (meat-free as listed). Non-vegetarian: $2.00 for bacon bits.
+- Tobiko Pasta: $19.90. Aglio olio style pasta with pan-seared scallops, tobiko, asparagus, mushroom, garlic and chilli flakes.
+- Pasta Carbonara: $17.90. Savour our rich pasta carbonara, with spaghetti coated in a creamy sauce of eggs, parmesan and bacon.
+- Pasta Aglio Olio: $16.90. Savour our aglio olio with a twist, featuring spaghetti coated in garlic-infused olive oil, chilli flakes, bell pepper, mushroom, and asparagus. Marked with a leaf on the menu (meat-free as listed). Spicy. Non-vegetarian: $2.00 for bacon bits.
+
+### Mains & Extras
+
+Proper plates for proper appetites.
+
+- Chicken Chop: $18.90. Char-grilled chicken chop, juicy on the inside with a crisp, golden sear. Served with your choice of fries or mash and a fresh side salad. New.
+- Fish & Chips: $18.90. Two pieces of golden-fried Alaskan pollock, served with fries, a fresh side salad, and tartar sauce. Crispy, satisfying, and everything you want in a fish & chips affair.
+- Side Salad: $6. Crisp romaine lettuce tossed in nutty sesame dressing, topped with juicy cherry tomatoes. Light, fresh, and just enough to tease.
+- Sauces: $2. Choose one: Mayonnaise, Nacho Cheese, Tartar, Curry, Buffalo Sauce (made in-house), or an extra helping of our signature Red Wine Sauce.
+
+### Draught Beer
+
+Cold, honest, and on tap.
+
+- Stella Artois: half $10, full pint $12.
+- Heineken: half $11, full pint $13.
+- Guinness Draught: half $12, full pint $15.
+- Little Creatures Pale Ale: half $12, full pint $15.
+- Goose Island: full pint $15.
+
+### Bottled Beer
+
+- Tiger: 1 bottle $10, 5 bottles $30.
+- Corona Extra: 1 bottle $14, 5 bottles $45.
+
+### House Wine
+
+- House Red · Le Petit Gargotte Cabernet Sauvignon: glass $13. Medium-bodied with blackcurrant and dark berry notes, gentle tannins and a clean, dry finish.
+- House White · Casa Silva Chardonnay: glass $13. Medium-bodied with tropical fruit, citrus and a touch of creaminess. Smooth and well-balanced.
+
+### Champagne
+
+- Charles Heidsieck Brut Réserve: bottle $129.
+- Bérêche & Fils Brut Réserve: bottle $129.
+
+### Wine by the Bottle
+
+- Château La Croix La Bastienne 2022: bottle $72. Red · Montagne Saint-Émilion, Bordeaux. Medium-bodied with dark berry fruit, subtle oak and fine tannins. Pairs well with the Ribeye Steak and The Hippies Burger.
+- Borgo del Mandorlo Primitivo di Manduria: bottle $90. Red · Puglia, Italy. Full-bodied and rich with plum, blackberry and spice; soft tannins and a warm, rounded finish. Pairs well with our burgers.
+- Astoria Alìsia Pinot Grigio: bottle $72. White · delle Venezie, Italy. Light-bodied and refreshing with citrus, green apple and floral notes; clean and dry. Pairs well with the Tobiko Pasta and Fish & Chips.
+
+### Gin
+
+One bottle purchase includes free mixers (4 cans, excludes Red Bull). Additional mixers are $3 a can for soda, Coke, Sprite, ginger ale, or Coke Zero. Red Bull is $6 a can.
+
+- Gordon Gin: glass $12.50, bottle $138.
+- Bombay Sapphire: glass $13, bottle $158.
+- Aviation Gin: glass $14.50, bottle $168.
+- Hendricks: glass $15, bottle $188.
+- Roku: glass $15, bottle $188.
+- Monkey 47: glass $16, bottle $169.
+
+### Rum
+
+- Bacardi Carta Bianca: glass $12.50, bottle $138.
+- Captain Morgan Spiced Gold: glass $12.50, bottle $138.
+- Captain Morgan Dark: glass $14.50, bottle $168.
+- Sailor Jerry Rum: glass $14.50, bottle $168.
+- Mount Gay Eclipse: glass $14.50, bottle $168.
+
+### Vodka
+
+- Smirnoff: glass $12.50, bottle $138.
+- Belvedere: glass $15, bottle $188.
+- Grey Goose: glass $15, bottle $188.
+- Reyka: glass $15, bottle $188.
+
+### Tequila
+
+- Jose Cuervo: glass $12.50, bottle $138.
+- Tequila Rose: glass $15, bottle $168.
+- Patron Silver: glass $15, bottle $188.
+- Herradura Silver: glass $16, bottle $198.
+
+### Whisky — Bourbon
+
+- Jim Beam: glass $12.50, bottle $138.
+- Jack Daniel's: glass $14.50, bottle $168.
+- Wild Turkey: glass $14.50, bottle $168.
+- Maker's Mark: glass $15, bottle $200.
+
+### Whisky — Blended
+
+- Whyte & Mackay: glass $12.50, bottle $138.
+- Monkey Shoulder: glass $15, bottle $188.
+- Jameson: glass $15, bottle $188.
+
+### Whisky — Single Malt
+
+- Glenfiddich 12: glass $16, bottle $198.
+- Glenfiddich 15: glass $18.50, bottle $228.
+- Balvenie 12: glass $18.50, bottle $228.
+- Balvenie 12 Twin Pack: $328. 2 bottles · save $128.
+- Balvenie 14: glass $25, bottle $298.
+- Balvenie 14 Twin Pack: $458. 2 bottles · save $138.
+- Dalmore 15 Single Malt: glass $16.50, bottle $238.
+- Macallan Double Cask 12yrs: glass $17, bottle $248.
+- Macallan Sherry Oak 12yrs: glass $19, bottle $268.
+- Macallan Double Cask 15yrs: glass $20, bottle $348.
+
+### Whisky — Cognac
+
+- Hennessy VSOP: glass $16, bottle $198.
+- Martell VSOP: glass $16, bottle $198.
+- Cordon Bleu: bottle $388.
+
+### Apéritif
+
+- Campari: glass $12.
+- Ricard: glass $12.
+- Pernod: glass $12.
+
+### Hippies Signature
+
+Signature cocktails, $18.00 a glass, nett.
+
+- Berry Long Island: $18. Gin, vodka, rum, tequila, cointreau, lime juice, strawberry.
+- Carribean: $18. Rum, coconut rum, pineapple juice, lime juice, orange juice, grenadine.
+- Daiquiri: $18. Rum, grapefruit juice, lime juice, strawberry.
+- Espresso Martini: $18. Vodka, espresso, kahlua.
+- Jimi Hendricks: $18. Gin, white wine, creme de cassis, grapefruit juice, lime juice.
+- Long Island Tea: $18. Gin, vodka, rum, tequila, cointreau, lime juice, coke.
+- Monday Blues: $18. White rum, vodka, blue curaçao, lime juice, pineapple.
+- Negroni: $18. Gin, campari, vermouth.
+- Old Fashioned: $18. Maker's mark, angostura bitters, orange bitters, soda.
+- Oolong Cassis: $18. Vodka, freshly brewed oolong tea, creme de cassis.
+- Pineapple Rum Punch: $18. Coconut rum, pineapple juice, lime juice, sprite.
+- Roku Puff: $18. Roku gin, pineapple juice, lime juice, raspberry.
+- Singapore Sling: $18. Gin, cointreau, cherry liqueur, DOM, pineapple juice, lime juice, grenadine, soda water.
+
+### Cocktails
+
+Classic cocktails, $16.00 a glass, nett.
+
+- Amaretto Breeze: $16. Amaretto, orange juice, pineapple juice.
+- Amaretto Sour: $16. Amaretto, lemon juice, simple syrup.
+- Black Russian: $16. Vodka, coffee liqueur.
+- Bloody Mary: $16. Vodka, tomato juice, lemon juice, worcestershire sauce, hot sauce, salt, pepper.
+- Brown Cow: $16. Coffee liqueur, milk.
+- Caipirinha: $16. Cachaça, lime.
+- China Blue: $16. Lychee liqueur, blue curaçao, grapefruit.
+- Cointreaupolitan: $16. Cointreau, cranberry juice, lime juice.
+- Cosmopolitan: $16. Vodka, cointreau, cranberry juice, lime juice.
+- Gin Martini: $16. Gin, dry vermouth, olive.
+- Illusion: $16. Vodka, melon liqueur, cointreau, pineapple juice.
+- Lemon Drop Martini: $16. Vodka, lemon juice, cointreau, simple syrup.
+- Lychee Martini: $16. Vodka, lychee liqueur, lychee juice.
+- Malibu Breeze: $16. Malibu rum, cranberry juice, pineapple juice.
+- Margarita: $16. Tequila, cointreau, lime juice.
+- Mojito: $16. White rum, lime juice, mint, sugar, soda water.
+- Moscow Mule: $16. Vodka, ginger ale, lime juice.
+- Piñacolada: $16. White rum, coconut cream, pineapple juice.
+- Sex on the Beach: $16. Vodka, peach schnapps, orange juice, cranberry juice.
+- Snow Ball: $16. Advocaat, sprite, lime juice.
+- Tom Collins: $16. Gin, lime juice, sugar syrup, soda water.
+- White Russian: $16. Vodka, coffee liqueur, cream.
+- Whisky Sour: $16. Whisky, lemon juice, simple syrup.
+
+### Soft Drinks, Tea & Water
+
+- Coke · Coke Zero · Sprite · Ginger Ale · Tonic Water: glass $6.50.
+- Redbull: glass $7.50.
+- English Breakfast · Green Tea · Earl Grey · Peach Tea · Chamomile (one-time refill): glass $7.50.
+- Sparkling Water 330ml: glass $6.
+
+### Mocktail
+
+- Lemon Lime Bitters · Shirley Temple · Virgin Mary · Virgin Mojito · Pussyfoot · Virgin Piñacolada: glass $11.50.
+
+### Coffee & Juices
+
+- Espresso Single Shot: glass $4.50.
+- Cappuccino · Cafe Latte · Latte Macchiato · Long Black · Flat White: glass $6.
+- Additional Shot: glass $2.
+- Cranberry · Lime · Orange · Pineapple · Tomato Juice: glass $8.
+
+### Vodka Jello Shot
+
+- Flavour of the Week: 1 shot $5, 6 shots $20.
+
+### Shots
+
+- Shaken — Kamikaze, Surfer on Acid, Slut Juice, Cunninglingus, Four Horsemen, Viggo's Passion: 1 shot $13.50, 6 shots $69.
+- Layered — B52, Dirty Nipple, Slippery Nipple, Itchy Nipple, Dubliner, Blowjob, Jagerbomb, Baby Guinness, Jellyfish, Bleeding Heart, Flat Liner, Brain Hemorrhage, Alien Brain Hemorrhage, Screaming Orgasm: 1 shot $14.50, 6 shots $75.
+
+### Final Destination
+
+- Tragic Death by Hippies — a psychedelic twist on the classic Long Island; four killer spirits layered in chaotic colour: $88.
+- Grateful Dead — a twisted take on the Long Island; four clear spirits go in, no one comes out the same: $35.
+- Flaming Lamborghini: $36.
+- Triple Clear: $36.
+- Absinthe Black Fairy Shot: $25.
+- Absinthe Blue Fairy Shot: $20.
 
 ## Pages
 
-- [Home](https://hippiesbar.sg/): Menu highlights, beer on tap, hours, map, and reservations
-- [About](https://hippiesbar.sg/about.html): Why Hippies exists and how nett pricing works
-- [FAQ](https://hippiesbar.sg/faq.html): GST, reservations, dietary options, parking, and happy hour
-- [Blog](https://hippiesbar.sg/blog.html): Guides to the bar, the ribeye, and Guinness on tap
-- [Best neighbourhood bar on Guillemard Road](https://hippiesbar.sg/blog/best-neighbourhood-bar-guillemard-road.html): Who the bar is for and how to get there
-- [Affordable ribeye steak in Singapore](https://hippiesbar.sg/blog/affordable-ribeye-steak-singapore.html): The $19.90 nett ribeye and what to order with it
-- [Guinness on tap and live music](https://hippiesbar.sg/blog/guinness-on-tap-live-music-singapore.html): Draught beer, rock music, outdoor seats, and late nights
+- [Home](https://hippiesbar.sg/): Menu highlights, beer on tap, hours, map, and reservations.
+- [About](https://hippiesbar.sg/about.html): Why Hippies exists and how nett pricing works.
+- [FAQ](https://hippiesbar.sg/faq.html): GST, reservations, dietary options, parking, and happy hour.
+- [Blog](https://hippiesbar.sg/blog.html): Guides to the bar, the ribeye, and Guinness on tap.
+- [Best neighbourhood bar on Guillemard Road](https://hippiesbar.sg/blog/best-neighbourhood-bar-guillemard-road.html): Who the bar is for and how to get there.
+- [Affordable ribeye steak in Singapore](https://hippiesbar.sg/blog/affordable-ribeye-steak-singapore.html): The $19.90 nett ribeye and what to order with it.
+- [Guinness on tap and live music](https://hippiesbar.sg/blog/guinness-on-tap-live-music-singapore.html): Draught beer, rock music, outdoor seats, and late nights.
 
 ## Optional
 
-- [Full food and drinks menu](https://imaginative-sorbet-0f6d13.netlify.app/): Complete nett-priced menu
-- [Sitemap](https://hippiesbar.sg/sitemap.xml): Every indexable URL
-- [Instagram](https://www.instagram.com/hippiesbar/): @hippiesbar
-- [Facebook](https://www.facebook.com/HippiesBarNGrill/): Hippies Bar N Grill
-- [Google Maps](https://maps.google.com/?q=Hippies+Bar+%26+Grill+391+Guillemard+Road+Singapore): Directions to 391 Guillemard Road
+- [Full food and drinks menu](https://imaginative-sorbet-0f6d13.netlify.app/): Complete nett-priced menu.
+- [Sitemap](https://hippiesbar.sg/sitemap.xml): Every indexable URL.
+- [Instagram](https://www.instagram.com/hippiesbar/): @hippiesbar.
+- [Facebook](https://www.facebook.com/HippiesBarNGrill/): Hippies Bar N Grill.
+- [Google Maps](https://maps.google.com/?q=Hippies+Bar+%26+Grill+391+Guillemard+Road+Singapore): Directions to 391 Guillemard Road.
