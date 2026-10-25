@@ -97,14 +97,13 @@ try {
     if (!model || failed || !visible || document.hidden) return;
     if (!motion.matches && last) elapsed += (now - last) / 1000;
     last = now;
-    const start = performance.now();
     const t = pose(); renderer.render(scene, camera);
     if (!motion.matches) {
-      // The hold and empty-glass beats are stills; sleep until the next action.
-      const delay = t >= 7 && t < 10 ? (10 - t) * 1000
-        : t >= 11.15 ? (LOOP_SECONDS - t) * 1000
-        : Math.max(0, 1000 / 24 - (performance.now() - start));
-      timer = setTimeout(requestDraw, delay);
+      // Active motion follows the display clock, exactly like pointer updates.
+      // Timers are only for still beats, where no GPU work is needed.
+      if (t >= 7 && t < 10) timer = setTimeout(requestDraw, (10 - t) * 1000);
+      else if (t >= 11.15) timer = setTimeout(requestDraw, (LOOP_SECONDS - t) * 1000);
+      else requestDraw();
     }
   }
 

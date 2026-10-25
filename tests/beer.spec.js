@@ -3,6 +3,12 @@ const { test, expect } = require('@playwright/test');
 async function countDraws(page) {
   await page.addInitScript(() => {
     window.heroDraws = 0;
+    window.heroFrameTimes = [];
+    const clear = WebGL2RenderingContext.prototype.clear;
+    WebGL2RenderingContext.prototype.clear = function (...args) {
+      if (this.canvas.classList.contains('beer-canvas')) window.heroFrameTimes.push(performance.now());
+      return clear.apply(this, args);
+    };
     for (const method of ['drawElements', 'drawArrays', 'drawElementsInstanced', 'drawArraysInstanced']) {
       const original = WebGL2RenderingContext.prototype[method];
       WebGL2RenderingContext.prototype[method] = function (...args) {
@@ -41,6 +47,37 @@ test('tap pours, ice drops, and the sequence repeats without controls', async ({
   await page.clock.fastForward(4500); await page.clock.runFor(40);
   await expect(stage).toHaveAttribute('data-beer-cycle', '1');
   await expect(stage).toHaveAttribute('data-beer-phase', 'pouring');
+});
+
+test('automatic playback uses the same frame cadence as dragging', async ({ page }) => {
+  test.setTimeout(60000);
+  await countDraws(page);
+  await page.clock.install({ time: new Date(0) });
+  await page.clock.pauseAt(new Date(1000));
+  await page.goto('/');
+  await expect(page.locator('.hero-stage')).toHaveClass(/beer-ready/);
+  await page.clock.runFor(40);
+  await page.clock.fastForward(2000); await page.clock.runFor(40);
+  await page.evaluate(() => { window.heroFrameTimes = []; });
+  await page.clock.runFor(480);
+  const automatic = await page.evaluate(() => window.heroFrameTimes);
+  // The controlled clock supplies one display frame every 16 ms.
+  expect(automatic.length).toBeGreaterThanOrEqual(28);
+  expect(automatic.length).toBeLessThanOrEqual(31);
+  const box = await page.locator('.beer-canvas').boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.evaluate(() => { window.heroFrameTimes = []; });
+  for (let i = 0; i < 30; i++) {
+    await page.mouse.move(box.x + box.width / 2 + i, box.y + box.height / 2);
+    await page.clock.runFor(16);
+  }
+  await page.mouse.up();
+  const dragging = await page.evaluate(() => window.heroFrameTimes);
+  expect(Math.abs(automatic.length - dragging.length)).toBeLessThanOrEqual(1);
+  for (const frames of [automatic, dragging]) {
+    expect(Math.max(...frames.slice(1).map((time, i) => time - frames[i]))).toBeLessThanOrEqual(17);
+  }
 });
 
 test('mobile reduced motion renders a still pint and keyboard rotation remains available', async ({ page }) => {

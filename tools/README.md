@@ -48,10 +48,11 @@ headline glows have been removed.
 
 Antialiasing smooths the silhouettes. The drawing buffer follows device pixel
 ratio up to 1.25, with a maximum dimension of 1024 pixels. This avoids the previous
-below-native resolution while keeping a modest pixel budget. Animation
-targets 24 fps and sleeps during the three-second full-pint hold and the empty
-beat. Rendering also stops offscreen, in hidden tabs, and under reduced motion
-(except explicit view changes). The 12-second pour-and-ice sequence is retained.
+below-native resolution while keeping a modest pixel budget. Active animation
+uses requestAnimationFrame directly, so automatic playback and dragging follow
+the same display cadence. Timers are used only to sleep during the three-second
+full-pint hold and the empty beat. Rendering also stops offscreen, in hidden tabs,
+and under reduced motion (except explicit view changes). The 12-second pour-and-ice sequence is retained.
 
 CSS, JavaScript, and model URLs include content hashes to avoid mixed cached
 versions after deployment. Canvas dimensions come from its container rather than
@@ -59,7 +60,7 @@ its drawing buffer, avoiding high-DPI resize feedback if CSS is unavailable.
 The SVG illustration remains a static fallback for WebGL or model-load failure.
 
 Browser tests cover a complete repeat cycle using a controlled clock, no control
-buttons, reduced motion, keyboard view changes, actual WebGL draw-call suspension
-during holds and offscreen, the render resolution budget, enabled antialiasing,
+buttons, equal automatic/dragging frame cadence, reduced motion, keyboard view
+changes, actual WebGL draw-call suspension during holds and offscreen, the render resolution budget, enabled antialiasing,
 model failure, versioned styles, and high-DPI sizing. Hardware-specific
 performance still needs checking on the deployed page and target devices.
