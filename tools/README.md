@@ -7,6 +7,7 @@ mesh locally through Three.js. There are no on-screen animation controls.
 - `tools/create-beer.py`: deterministic geometry generator (Blender 4.3+).
 - `Assets/models/beer.glb`: web model (~43 KiB, 1,540 triangles).
 - `src/beer-hero.js`: scene, lightweight materials, and animation.
+- `src/pour-story.js`: scroll choreography that pins the pint over the taps heading.
 - `Assets/js/beer-hero.js`: committed browser bundle, including Three.js.
 
 Rebuild the model from the repository root:
@@ -36,6 +37,26 @@ the next pour. Liquid geometry follows the glass taper while filling. Drag or
 arrow keys gently change the viewing angle; Home restores it. Touch scrolling
 is retained. Reduced motion renders one still, full pint with ice.
 
+## Scroll story
+
+With motion allowed, the script moves the stage into a sticky viewport inside
+`#taps` (`.pour-pin`) as soon as it runs; the hero keeps a same-sized
+placeholder. On scroll the pint glides from the hero to the centre of the screen
+while the hero copy fades, and the looping pint drops away and an empty glass
+rises in its place. Once pinned, scrolling eases in the eyebrow and title
+beneath it, grows frost up the glass from the base, reveals the subtitle, then
+pulls the tap and pours a pint with rising bubbles. The pin then releases and
+the beer cards scroll up as usual, followed by the ticker and slideshow.
+Scrolling back to the top returns the stage to the hero and resumes the loop.
+
+The pin holds for 2.5 viewport heights after the glide (`REVEAL_VIEWPORTS`).
+Vertical pinning is native `position: sticky`; scripts only animate the glide,
+the text reveals, and the scene, from a scroll position eased toward the real
+one. Layout is measured on resize and font load. Reduced motion, WebGL or model
+failure, a stylesheet without the pin rules, and screens too short to fit the
+pint above the heading (landscape phones) all keep the static page: the stage
+in the hero and the heading above the cards.
+
 ## Performance and delivery
 
 All surfaces use unlit MeshBasicMaterial. A directional tint is baked into vertex
@@ -43,15 +64,19 @@ colors once at load time to keep the shape readable; there are no runtime lights
 reflection maps, specular highlights, refraction, shadows, or postprocessing.
 Beer, foam, tap, handle, and ice are opaque. Only the glass shell uses alpha
 blending; the printed label uses an opaque alpha-test cutout.
-Condensation, rising bubbles, foam-crown detail, headline particles, and animated
-headline glows have been removed.
+Condensation, foam-crown detail, headline particles, and animated headline glows
+have been removed. The scroll story adds one transparent frost shell (procedural
+noise on the glass geometry, no textures) and 90 point-sprite bubbles; both are
+hidden in the looping hero.
 
 Antialiasing smooths the silhouettes. The drawing buffer follows device pixel
 ratio up to 1.25, with a maximum dimension of 1024 pixels. This avoids the previous
 below-native resolution while keeping a modest pixel budget. Active animation
 uses requestAnimationFrame directly, so automatic playback and dragging follow
 the same display cadence. Timers are used only to sleep during the three-second
-full-pint hold and the empty beat. Rendering also stops offscreen, in hidden tabs,
+full-pint hold and the empty beat. In the scroll story, frames follow scroll
+changes; only the poured pint's rising bubbles keep the display clock running
+while the stage is on screen. Rendering also stops offscreen, in hidden tabs,
 and under reduced motion (except explicit view changes). The 12-second pour-and-ice sequence is retained.
 
 CSS, JavaScript, and model URLs include content hashes to avoid mixed cached
@@ -62,5 +87,9 @@ The SVG illustration remains a static fallback for WebGL or model-load failure.
 Browser tests cover a complete repeat cycle using a controlled clock, no control
 buttons, equal automatic/dragging frame cadence, reduced motion, keyboard view
 changes, actual WebGL draw-call suspension during holds and offscreen, the render resolution budget, enabled antialiasing,
-model failure, versioned styles, and high-DPI sizing. Hardware-specific
+model failure, versioned styles, and high-DPI sizing. Scroll story tests walk
+every step in order, check the pint stays centred and pinned above the heading,
+that bubbles stop rendering once the story scrolls away, that the loop resumes at
+the top, and that reduced motion, model failure, and landscape phones keep the
+static layout. Hardware-specific
 performance still needs checking on the deployed page and target devices.

@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { createPourStory } from './pour-story.js';
 
 const stage = document.querySelector('.hero-stage');
 const canvas = stage.querySelector('.beer-canvas');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const LOOP_SECONDS = 12;
+const BUBBLES = 90;
 let renderer;
 
 try {
@@ -20,6 +22,58 @@ try {
   const tapMaterial = new THREE.MeshBasicMaterial({ color: 0x9e9586, vertexColors: true, transparent: false, opacity: 1 });
   const iceMaterial = new THREE.MeshBasicMaterial({ color: 0xb5e8ff, vertexColors: true, transparent: false, opacity: 1 });
   const handleMaterial = new THREE.MeshBasicMaterial({ color: 0x704222, vertexColors: true, transparent: false, opacity: 1 });
+  const glassTint = new THREE.Color(0xa7c2c8), frostTint = new THREE.Color(0xe4f6ff);
+  // Frost climbs the glass from the base during the scroll story, then thins where beer
+  // fills behind it. 3D noise on the lathe's own positions needs no UVs and has no seam;
+  // ridged noise reads as crystals.
+  const frostMaterial = new THREE.ShaderMaterial({
+    uniforms: { frost: { value: 0 }, wet: { value: 0 }, beerTop: { value: 0 } }, transparent: true, depthWrite: false,
+    vertexShader: `varying vec3 vPosition; varying float vRim;
+      void main() {
+        vPosition = position;
+        vec4 view = modelViewMatrix * vec4(position, 1.0);
+        vRim = 1.0 - abs(dot(normalize(normalMatrix * normal), normalize(-view.xyz)));
+        gl_Position = projectionMatrix * view;
+      }`,
+    fragmentShader: `uniform float frost, wet, beerTop; varying vec3 vPosition; varying float vRim;
+      float hash(vec3 p) { p = fract(p * 0.3183099 + 0.1) * 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+      float noise(vec3 p) {
+        vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(mix(hash(i), hash(i + vec3(1, 0, 0)), f.x), mix(hash(i + vec3(0, 1, 0)), hash(i + vec3(1, 1, 0)), f.x), f.y),
+          mix(mix(hash(i + vec3(0, 0, 1)), hash(i + vec3(1, 0, 1)), f.x), mix(hash(i + vec3(0, 1, 1)), hash(i + vec3(1, 1, 1)), f.x), f.y), f.z);
+      }
+      void main() {
+        float patchy = noise(vPosition * 3.1), grain = noise(vPosition * 11.0 + 4.0);
+        float crystal = pow(1.0 - abs(noise(vPosition * 7.0 + 9.0) * 2.0 - 1.0), 5.0);
+        float height = vPosition.y / 2.46 + (patchy - 0.5) * 0.28, front = frost * 1.3 - 0.15;
+        float covered = 1.0 - smoothstep(front - 0.07, front + 0.01, height);
+        float edge = (1.0 - smoothstep(0.0, 0.045, abs(height - front))) * (1.0 - frost);
+        float glint = step(0.93, hash(floor(vPosition * 64.0)));
+        float behindBeer = wet * (1.0 - smoothstep(beerTop - 0.06, beerTop, vPosition.y));
+        float cover = (0.16 + 0.26 * grain) * (1.0 - 0.72 * behindBeer) + 0.42 * crystal * (1.0 - 0.4 * behindBeer);
+        float alpha = covered * (cover * (0.7 + 0.6 * vRim) + glint * 0.35) + edge * 0.5;
+        gl_FragColor = vec4(mix(vec3(0.78, 0.9, 0.98), vec3(1.0), crystal * 0.7 + glint), min(alpha, 0.82));
+      }`,
+  });
+  // Bubbles ride just outside the opaque beer, so the beer itself hides the far side.
+  const bubbleMaterial = new THREE.ShaderMaterial({
+    uniforms: { halfHeight: { value: 1 } }, transparent: true, depthWrite: false,
+    vertexShader: `attribute float size; attribute float alpha; uniform float halfHeight; varying float vAlpha;
+      void main() {
+        vec4 view = modelViewMatrix * vec4(position, 1.0);
+        gl_Position = projectionMatrix * view;
+        gl_PointSize = size * projectionMatrix[1][1] * halfHeight / -view.z;
+        vAlpha = alpha;
+      }`,
+    fragmentShader: `varying float vAlpha;
+      void main() {
+        vec2 p = gl_PointCoord * 2.0 - 1.0; float r = length(p);
+        if (r > 1.0) discard;
+        float rim = smoothstep(0.55, 0.9, r) * (1.0 - smoothstep(0.9, 1.0, r));
+        float glint = 1.0 - smoothstep(0.0, 0.32, length(p + vec2(0.35, 0.35)));
+        gl_FragColor = vec4(1.0, 0.95, 0.82, (rim * 0.75 + glint * 0.8 + 0.1) * vAlpha);
+      }`,
+  });
   // Bake a simple directional tint once, so depth is readable without per-frame lighting.
   function shadeGeometry(geometry) {
     const normals = geometry.attributes.normal;
@@ -32,26 +86,57 @@ try {
   }
   const pivot = new THREE.Group(); pivot.position.y = -1.85; scene.add(pivot);
   const pint = new THREE.Group(); pivot.add(pint);
-  let model, liquid, foam, stream, handle, ice;
+  let model, liquid, foam, stream, handle, ice, frost;
   let foamBase, liquidBase, previousFill = -1;
-  let visible = false, failed = false, raf = 0, timer = 0, last = 0, elapsed = 0;
+  let visible = false, failed = false, raf = 0, timer = 0, last = 0, elapsed = 0, bubbleTime = 0;
   let yaw = -.12, pitch = 0, dragging = false, previousX = 0, previousY = 0;
   const iceX = [.22, -.25, .05], iceZ = [.30, .35, -.16];
   const clamp = THREE.MathUtils.clamp;
   const ease = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+  let seed = 7;
+  const random = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  const bubbleGeometry = new THREE.BufferGeometry();
+  bubbleGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(BUBBLES * 3), 3).setUsage(THREE.DynamicDrawUsage));
+  bubbleGeometry.setAttribute('alpha', new THREE.BufferAttribute(new Float32Array(BUBBLES), 1).setUsage(THREE.DynamicDrawUsage));
+  bubbleGeometry.setAttribute('size', new THREE.BufferAttribute(Float32Array.from({ length: BUBBLES }, () => .04 + random() * .04), 1));
+  const bubbleSeeds = Array.from({ length: BUBBLES }, () => [random() * Math.PI * 2, .22 + random() * .3, random(), random() * 6.3]);
+  const bubbles = new THREE.Points(bubbleGeometry, bubbleMaterial);
+  // Drawn after the frost so the fizz still reads through it.
+  bubbles.frustumCulled = false; bubbles.renderOrder = 3; bubbles.visible = false; pint.add(bubbles);
+
+  function riseBubbles(surface) {
+    const positions = bubbleGeometry.attributes.position, alpha = bubbleGeometry.attributes.alpha;
+    bubbleSeeds.forEach(([angle, speed, offset, sway], i) => {
+      const rise = (offset + bubbleTime * speed) % 1;
+      const y = .26 + rise * Math.max(0, surface - .32);
+      // The beer's radius follows the glass taper; bubbles sit just outside it.
+      const radius = .538 + .0956 * (y - .19), a = angle + Math.sin(bubbleTime * 1.6 + sway) * .035;
+      positions.setXYZ(i, Math.cos(a) * radius, y, Math.sin(a) * radius);
+      alpha.setX(i, Math.min(1, rise * 12, (1 - rise) * 8));
+    });
+    positions.needsUpdate = alpha.needsUpdate = true;
+  }
 
   function pose() {
     const t = motion.matches ? 8.5 : elapsed % LOOP_SECONDS;
-    const fill = .06 + .94 * ease((t - .65) / 4.1);
-    const pouring = t >= .65 && t < 4.75;
-    const phase = t < .65 ? 'ready' : pouring ? 'pouring' : t < 7 ? 'ice' : t < 10 ? 'hold' : 'reset';
+    const { glide, pour } = story.state;
+    const loopPouring = t >= .65 && t < 4.75;
+    const phase = t < .65 ? 'ready' : loopPouring ? 'pouring' : t < 7 ? 'ice' : t < 10 ? 'hold' : 'reset';
     if (stage.dataset.beerPhase !== phase) stage.dataset.beerPhase = phase;
     const cycle = String(Math.floor(elapsed / LOOP_SECONDS));
     if (stage.dataset.beerCycle !== cycle) stage.dataset.beerCycle = cycle;
+    // Halfway through the scroll glide, out of frame, an empty glass replaces the looping pint;
+    // scroll then frosts it and pours.
+    const scrolled = glide > .5, poured = ease((pour - .55) / .31);
+    const fill = scrolled ? .06 + .94 * poured : .06 + .94 * ease((t - .65) / 4.1);
+    const pouring = scrolled ? pour > .55 && pour < .86 : !glide && loopPouring;
     // The full pint leaves below the frame; an empty one returns before the tap opens.
-    pint.position.y = t >= 10 ? -4.5 * ease((t - 10) / 1.1) : -4.5 * (1 - ease(t / .6));
-    if (motion.matches) pint.position.y = 0;
-    pint.visible = t < 11.15 || motion.matches;
+    let y = t >= 10 ? -4.5 * ease((t - 10) / 1.1) : -4.5 * (1 - ease(t / .6));
+    if (motion.matches) y = 0;
+    if (scrolled) y = -4.5 * (1 - ease((glide - .5) / .5));
+    else y += (-4.5 - y) * ease(glide / .5);
+    pint.position.y = y;
+    pint.visible = scrolled || t < 11.15 || motion.matches;
     pivot.rotation.set(pitch, yaw, 0);
     const surface = .19 + 2.03 * fill;
     // Keep the liquid inside the taper at every fill height, not just when full.
@@ -65,6 +150,7 @@ try {
       }
       positions.needsUpdate = true; previousFill = fill;
     }
+    liquid.visible = !scrolled || poured > 0;
     // Narrow the foam as it descends into the tapered glass.
     const foamRadius = (.53 + .194 * fill) / .724;
     foam.scale.set(foamRadius, 1, foamRadius);
@@ -73,16 +159,24 @@ try {
     stream.visible = pouring;
     stream.position.set(-.24, (3.06 + surface) / 2, 0);
     stream.scale.set(1, 3.06 - surface, 1);
-    handle.rotation.x = -.5 * (ease((t - .25) / .4) - ease((t - 4.65) / .35));
+    handle.rotation.x = scrolled ? -.5 * (ease((pour - .52) / .05) - ease((pour - .85) / .04))
+      : -.5 * (ease((t - .25) / .4) - ease((t - 4.65) / .35)) * (1 - ease(glide / .25));
     ice.forEach((cube, i) => {
       const age = t - (4.85 + i * .58);
-      cube.visible = age >= 0 && t < 11.15;
+      cube.visible = !scrolled && age >= 0 && t < 11.15;
       const drop = clamp(age / .65, 0, 1);
       const landing = 2.32;
       const bob = age > .65 && t < 7 ? Math.sin((age - .65) * 10) * .10 * Math.exp(-(age - .65) * 1.7) : 0;
       cube.position.set(iceX[i], 3.85 - (3.85 - landing) * drop * drop + bob, iceZ[i]);
       cube.rotation.set(.35 + drop * .8 + i, .4 + drop * .7, .2 + i * .7);
     });
+    const frosted = scrolled ? ease((pour - .12) / .28) : 0;
+    frost.visible = frosted > 0; frostMaterial.uniforms.frost.value = frosted;
+    frostMaterial.uniforms.wet.value = scrolled ? poured : 0; frostMaterial.uniforms.beerTop.value = surface + .12;
+    glassMaterial.color.lerpColors(glassTint, frostTint, frosted);
+    glassMaterial.opacity = .16 + .1 * frosted;
+    bubbles.visible = scrolled && poured > .08;
+    if (bubbles.visible) riseBubbles(surface);
     return t;
   }
 
@@ -95,10 +189,15 @@ try {
   function draw(now) {
     raf = 0;
     if (!model || failed || !visible || document.hidden) return;
-    if (!motion.matches && last) elapsed += (now - last) / 1000;
+    // The loop clock pauses while the scroll story owns the pint.
+    const looping = !story.state.glide, dt = last ? (now - last) / 1000 : 0;
+    if (!motion.matches && looping) elapsed += dt; else bubbleTime += dt;
     last = now;
     const t = pose(); renderer.render(scene, camera);
-    if (!motion.matches) {
+    if (!motion.matches && !looping) {
+      // Scroll supplies story frames; only rising bubbles need the display clock.
+      if (bubbles.visible) requestDraw(); else last = 0;
+    } else if (!motion.matches) {
       // Active motion follows the display clock, exactly like pointer updates.
       // Timers are only for still beats, where no GPU work is needed.
       if (t >= 7 && t < 10) timer = setTimeout(requestDraw, (10 - t) * 1000);
@@ -114,7 +213,7 @@ try {
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.position.z = camera.aspect < .8 ? 8.7 : 8;
-    camera.updateProjectionMatrix(); requestDraw();
+    camera.updateProjectionMatrix(); bubbleMaterial.uniforms.halfHeight.value = canvas.height / 2; requestDraw();
   }
   const resize = new ResizeObserver(fitCanvas); resize.observe(stage); fitCanvas();
   const intersection = new IntersectionObserver(([entry]) => {
@@ -122,8 +221,10 @@ try {
     if (!visible) stop(); else requestDraw();
   });
   intersection.observe(stage);
+  const story = createPourStory(stage, requestDraw);
+  story.enabled = !motion.matches;
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else requestDraw(); });
-  motion.addEventListener('change', () => { stop(); requestDraw(); });
+  motion.addEventListener('change', () => { stop(); story.enabled = !motion.matches && !failed; requestDraw(); });
   canvas.addEventListener('pointerdown', e => {
     dragging = true; previousX = e.clientX; previousY = e.clientY; canvas.setPointerCapture(e.pointerId);
   });
@@ -143,7 +244,7 @@ try {
     requestDraw();
   });
   function fallback() {
-    failed = true; stop(); resize.disconnect(); intersection.disconnect();
+    failed = true; stop(); story.enabled = false; resize.disconnect(); intersection.disconnect();
     canvas.tabIndex = -1; stage.classList.remove('beer-ready'); renderer.dispose();
   }
   canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); fallback(); });
@@ -166,6 +267,8 @@ try {
       else if (!['Ice', 'Condensation', 'FoamCrown'].includes(child.name)) pint.add(child);
     }
     liquid = pint.getObjectByName('Liquid'); foam = pint.getObjectByName('Head');
+    const glass = pint.getObjectByName('Glass');
+    frost = new THREE.Mesh(glass.geometry, frostMaterial); frost.renderOrder = 2; glass.add(frost);
     liquidBase = liquid.geometry.attributes.position.array.slice();
     foamBase = foam.position.y;
     handle = pivot.getObjectByName('TapHandle');
