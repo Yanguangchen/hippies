@@ -15,6 +15,7 @@ async function countDraws(page) {
 
 test('tap pours, ice drops, and the sequence repeats without controls', async ({ page }) => {
   test.setTimeout(60000);
+  await countDraws(page);
   // Freeze time so software-rendered screenshots cannot skip a short phase.
   await page.clock.install({ time: new Date(0) });
   await page.clock.pauseAt(new Date(1000));
@@ -32,7 +33,12 @@ test('tap pours, ice drops, and the sequence repeats without controls', async ({
   expect(pouring.equals(ice)).toBeFalsy();
   await page.clock.fastForward(2500); await page.clock.runFor(40);
   await expect(stage).toHaveAttribute('data-beer-phase', 'hold');
-  await page.clock.fastForward(5000); await page.clock.runFor(40);
+  const holdDraws = await page.evaluate(() => window.heroDraws);
+  await page.clock.fastForward(500);
+  expect(await page.evaluate(() => window.heroDraws)).toBe(holdDraws);
+  await expect(page.locator('.hero .spark, .hero .frost, .hero .ember')).toHaveCount(0);
+  await expect(page.locator('.hero h1 .icy')).toHaveCSS('filter', 'none');
+  await page.clock.fastForward(4500); await page.clock.runFor(40);
   await expect(stage).toHaveAttribute('data-beer-cycle', '1');
   await expect(stage).toHaveAttribute('data-beer-phase', 'pouring');
 });
@@ -90,7 +96,9 @@ test.describe('cached styles and high-DPI sizing', () => {
     await expect(canvas).toHaveCSS('opacity', '1');
     const sizes = await canvas.evaluate(c => ({ buffer: c.width, width: c.getBoundingClientRect().width, container: c.parentElement.clientWidth }));
     expect(sizes.width).toBe(sizes.container);
-    expect(sizes.buffer).toBeLessThanOrEqual(sizes.container);
+    expect(sizes.buffer).toBeLessThanOrEqual(sizes.container * .85);
+    expect(sizes.buffer).toBeLessThanOrEqual(420);
+    expect(await canvas.evaluate(c => c.getContext('webgl2').getContextAttributes().antialias)).toBeFalsy();
     const centerOwnsCanvas = await canvas.evaluate(c => {
       const r = c.getBoundingClientRect();
       return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === c;
