@@ -73,15 +73,19 @@ in the hero and the heading above the cards.
 
 ## Performance and delivery
 
-There are no runtime lights, environment maps, refraction, shadows, or
-postprocessing. Beer and foam use unlit MeshBasicMaterial with a directional
-tint baked into vertex colors at load time. Chrome, brass, the black grip, and
-ice use MeshMatcapMaterial: one texture lookup per pixel, with small matcaps
-painted on a canvas at load time (no image downloads). The glass uses a short
-shader with a Fresnel rim and two strip reflections that catch the flutes.
+Glass and chrome are recognised by what they reflect, so the scene has one
+image-based environment: a small bar of warm and cool light panels over a wood
+bar top, built from a few planes and prefiltered once at load with
+PMREMGenerator (no image downloads). There are no runtime lights, refraction or
+transmission passes, shadows, or postprocessing. Chrome, brass, the black grip,
+and ice use MeshStandardMaterial lit only by that environment. The glass is a
+black, very smooth MeshPhysicalMaterial whose reflections are blended
+additively (`One, OneMinusSrcAlpha`) with a faint darkening, so edges and flutes
+catch the light while the body stays see-through over the page. Beer and foam
+use unlit MeshBasicMaterial with a directional tint baked into vertex colors.
 Beer, foam, tap, handle, and ice are opaque; the glass and the mug print are
-alpha blended. The model is about four times its earlier size to carry the mug
-and tap detail.
+blended. The model is about four times its earlier size to carry the mug and
+tap detail.
 Condensation, foam-crown detail, headline particles, and animated headline glows
 have been removed. The scroll story adds one transparent frost shell (procedural
 noise on the mug geometry, no textures) and 90 point-sprite bubbles; both are
@@ -109,6 +113,9 @@ model failure, versioned styles, and high-DPI sizing. Scroll story tests walk
 every step in order, check the mug stays centred and pinned above the heading,
 that bubbles stop rendering once the story scrolls away, that the loop resumes at
 the top, and that reduced motion, model failure, and landscape phones keep the
-static layout. A model test checks the mug has its handle and the tap handle
-keeps its chrome, brass, and grip parts. Hardware-specific
+static layout. A phone-profile test (iPhone 13, touch and mobile viewport)
+checks the story runs without widening the page: phones grow the layout to fit
+overflowing content, which desktop Chromium hides behind `overflow-x: hidden`.
+A model test checks the mug has its handle and the tap handle keeps its chrome,
+brass, and grip parts. Hardware-specific
 performance still needs checking on the deployed page and target devices.
