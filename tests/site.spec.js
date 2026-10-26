@@ -50,6 +50,7 @@ const pages = [
   { path: '/blog/affordable-ribeye-steak-singapore.html', canonical: 'https://hippiesbar.sg/blog/affordable-ribeye-steak-singapore.html' },
   { path: '/blog/guinness-on-tap-live-music-singapore.html', canonical: 'https://hippiesbar.sg/blog/guinness-on-tap-live-music-singapore.html' },
   { path: '/blog/happy-hour-before-8pm-guillemard-road.html', canonical: 'https://hippiesbar.sg/blog/happy-hour-before-8pm-guillemard-road.html' },
+  { path: '/blog/sharing-plates-hippies-bar.html', canonical: 'https://hippiesbar.sg/blog/sharing-plates-hippies-bar.html' },
 ];
 
 test.describe('Technical SEO and answer-engine files', () => {
@@ -147,7 +148,7 @@ test.describe('Technical SEO and answer-engine files', () => {
       const known = name === 'Ribeye Steak' ? 'The Ribeye Steak' : name === 'Hippies Bites Platter' ? "Hippies' Bites Platter" : name;
       expect(items.some((item) => item.name === known), known).toBeTruthy();
     }
-    await expect(page.locator('#guides a')).toHaveCount(5);
+    await expect(page.locator('#guides a')).toHaveCount(6);
     await expect(page.locator('.stat .num').last()).toHaveText('5');
   });
 
