@@ -22,6 +22,7 @@ test.describe('Static Website Tests', () => {
     await expect(page.locator('a[href="blog/best-neighbourhood-bar-guillemard-road.html"]')).toBeVisible();
     await expect(page.locator('a[href="blog/affordable-ribeye-steak-singapore.html"]')).toBeVisible();
     await expect(page.locator('a[href="blog/guinness-on-tap-live-music-singapore.html"]')).toBeVisible();
+    await expect(page.locator('a[href="blog/happy-hour-before-8pm-guillemard-road.html"]')).toBeVisible();
   });
 
   test('blog article has responsive reservation CTA', async ({ page }) => {
@@ -48,6 +49,7 @@ const pages = [
   { path: '/blog/best-neighbourhood-bar-guillemard-road.html', canonical: 'https://hippiesbar.sg/blog/best-neighbourhood-bar-guillemard-road.html' },
   { path: '/blog/affordable-ribeye-steak-singapore.html', canonical: 'https://hippiesbar.sg/blog/affordable-ribeye-steak-singapore.html' },
   { path: '/blog/guinness-on-tap-live-music-singapore.html', canonical: 'https://hippiesbar.sg/blog/guinness-on-tap-live-music-singapore.html' },
+  { path: '/blog/happy-hour-before-8pm-guillemard-road.html', canonical: 'https://hippiesbar.sg/blog/happy-hour-before-8pm-guillemard-road.html' },
 ];
 
 test.describe('Technical SEO and answer-engine files', () => {
@@ -145,7 +147,7 @@ test.describe('Technical SEO and answer-engine files', () => {
       const known = name === 'Ribeye Steak' ? 'The Ribeye Steak' : name === 'Hippies Bites Platter' ? "Hippies' Bites Platter" : name;
       expect(items.some((item) => item.name === known), known).toBeTruthy();
     }
-    await expect(page.locator('#guides a')).toHaveCount(4);
+    await expect(page.locator('#guides a')).toHaveCount(5);
     await expect(page.locator('.stat .num').last()).toHaveText('5');
   });
 
